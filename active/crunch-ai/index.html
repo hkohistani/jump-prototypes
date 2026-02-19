@@ -1,0 +1,1552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crunch AI - Prototype</title>
+    <style>
+        @font-face {
+            font-family: 'Futura Wolves Autocaps';
+            src: url('/Users/hammedkohistani/Desktop/airds/public/fonts/Futura_Wolves_Autocaps.otf') format('opentype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .phone-container {
+            position: relative;
+            width: 413px;
+            height: 872px;
+            background: linear-gradient(145deg, #2c2c2c 0%, #1a1a1a 100%);
+            border-radius: 55px;
+            padding: 10px;
+            box-shadow:
+                0 30px 80px rgba(0, 0, 0, 0.8),
+                inset 0 0 0 2px rgba(255, 255, 255, 0.1),
+                inset 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Side Buttons */
+        .side-button {
+            position: absolute;
+            background: linear-gradient(90deg, #1a1a1a 0%, #2c2c2c 100%);
+            border-radius: 2px;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .volume-up {
+            left: -3px;
+            top: 160px;
+            width: 3px;
+            height: 60px;
+        }
+
+        .volume-down {
+            left: -3px;
+            top: 230px;
+            width: 3px;
+            height: 60px;
+        }
+
+        .mute-switch {
+            left: -3px;
+            top: 110px;
+            width: 3px;
+            height: 35px;
+        }
+
+        .power-button {
+            right: -3px;
+            top: 180px;
+            width: 3px;
+            height: 90px;
+        }
+
+        /* Dynamic Island */
+        .dynamic-island {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 126px;
+            height: 37px;
+            background: #000;
+            border-radius: 20px;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+        }
+
+        .dynamic-island::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: 12px;
+            transform: translateY(-50%);
+            width: 10px;
+            height: 10px;
+            background: radial-gradient(circle, #1e3a8a 0%, #1e40af 100%);
+            border-radius: 50%;
+            box-shadow: 0 0 8px rgba(59, 130, 246, 0.6);
+        }
+
+        .phone-frame {
+            width: 393px;
+            height: 852px;
+            background: #081627;
+            border-radius: 45px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Status Bar */
+        .status-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 18px 25px 0;
+            z-index: 10;
+        }
+
+        .status-bar .time {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro", sans-serif;
+            font-size: 17px;
+            font-weight: 600;
+            line-height: 22px;
+            color: #fff;
+            text-align: left;
+        }
+
+        .status-bar .indicators {
+            display: flex;
+            gap: 7px;
+            align-items: center;
+            height: 22px;
+        }
+
+        .status-bar .indicators img {
+            display: block;
+        }
+
+        .status-bar .cellular-icon {
+            width: 19.2px;
+            height: 12.226px;
+        }
+
+        .status-bar .wifi-icon {
+            width: 17.142px;
+            height: 12.328px;
+        }
+
+        .status-bar .battery-icon {
+            width: 27.328px;
+            height: 13px;
+        }
+
+        /* Header */
+        .header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 154px;
+            background: linear-gradient(180deg, rgba(5, 14, 25, 0.94) 0%, rgba(5, 14, 25, 0.65) 24%, rgba(8, 22, 39, 0) 100%);
+            z-index: 5;
+        }
+
+        .header-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 62px 16px 0;
+        }
+
+        .glass-button {
+            width: 48px;
+            height: 48px;
+            border-radius: 100px;
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .glass-button:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: scale(1.05);
+        }
+
+        .glass-button svg {
+            width: 24px;
+            height: 24px;
+            stroke: white;
+            stroke-width: 2;
+            fill: none;
+        }
+
+        .header-title {
+            position: absolute;
+            top: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            padding-bottom: 2px;
+        }
+
+        .header-title h1 {
+            font-family: 'Futura Wolves Autocaps', 'Futura', 'Futura PT', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 22px;
+            font-weight: normal;
+            font-style: normal;
+            line-height: 20px;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: -0.11px;
+            margin-bottom: 4px;
+        }
+
+        .header-title p {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 12px;
+            font-weight: 400;
+            font-style: normal;
+            line-height: 1;
+            color: rgba(255, 255, 255, 0.75);
+            letter-spacing: -0.24px;
+        }
+
+        /* Chat Area */
+        .chat-area {
+            position: absolute;
+            top: 134px;
+            left: 0;
+            right: 0;
+            bottom: 100px;
+            overflow-y: auto;
+            padding: 20px 16px;
+        }
+
+        /* Custom Scrollbar */
+        .chat-area::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-area::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .chat-area::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+
+        .chat-area::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Firefox */
+        .chat-area {
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+        }
+
+        .message {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: messageSlideIn 0.3s forwards;
+        }
+
+        @keyframes messageSlideIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #266092;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .avatar.loading {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .message-content {
+            flex: 1;
+            color: white;
+            font-size: 15px;
+            line-height: 1.4;
+            padding: 0;
+        }
+
+        .message.user {
+            justify-content: flex-end;
+            flex-direction: row;
+        }
+
+        .message.user .message-content {
+            flex: 0 1 auto;
+            max-width: 80%;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
+            padding: 12px 16px;
+            margin-left: auto;
+        }
+
+        .message.user .avatar {
+            display: none;
+        }
+
+        .message-content img.seat-image {
+            width: 100%;
+            border-radius: 12px;
+            margin-top: 12px;
+            display: block;
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+        }
+
+        .message.user .message-content {
+            background: rgba(38, 96, 146, 0.3);
+        }
+
+        /* Input Area */
+        .input-area {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 16px 16px 32px 16px;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            background: linear-gradient(180deg, rgba(8, 22, 39, 0) 0%, rgba(8, 22, 39, 1) 20%);
+        }
+
+        .add-button {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .add-button:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: scale(1.05);
+        }
+
+        .add-button svg {
+            width: 24px;
+            height: 24px;
+            stroke: white;
+            stroke-width: 2;
+        }
+
+        .input-container {
+            flex: 1;
+            position: relative;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border-radius: 28px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            height: 56px;
+            display: flex;
+            align-items: center;
+            padding: 0 64px 0 20px;
+            transition: all 0.3s;
+        }
+
+        .input-container.focused {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .input-container input {
+            flex: 1;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 14px;
+            outline: none;
+            padding-right: 10px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .input-container input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .input-actions {
+            position: absolute;
+            right: 8px;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .mic-button, .send-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .mic-button {
+            background: none;
+            display: none;
+        }
+
+        .mic-button:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .send-button {
+            background: #79BC43;
+            transition: all 0.2s;
+        }
+
+        .send-button:hover {
+            background: #6aa93a;
+            transform: scale(1.05);
+        }
+
+        .mic-button svg {
+            width: 20px;
+            height: 20px;
+            stroke: white;
+            stroke-width: 2;
+            fill: none;
+        }
+
+        .send-button svg {
+            width: 24px;
+            height: 24px;
+            stroke: none;
+            fill: none;
+        }
+
+        .send-button img {
+            width: 16px;
+            height: 16px;
+            filter: brightness(0) saturate(0);
+            opacity: 1;
+        }
+
+        /* Home Indicator */
+        .home-indicator {
+            position: absolute;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 139px;
+            height: 5px;
+            background: white;
+            border-radius: 100px;
+        }
+
+        /* Typing Indicator */
+        .typing-indicator {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 16px;
+        }
+
+        .typing-indicator.active {
+            display: flex;
+        }
+
+        .typing-indicator .basketball {
+            font-size: 24px;
+            animation: bounce 0.8s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-12px);
+            }
+        }
+
+        /* Instructions Overlay */
+        .instructions {
+            position: absolute;
+            bottom: 120px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 20px;
+            font-size: 13px;
+            text-align: center;
+            animation: fadeInOut 3s forwards;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0; }
+            10%, 90% { opacity: 1; }
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .action-button {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            padding: 12px 24px;
+            color: white;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: -0.28px;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+            width: 100%;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 8px;
+        }
+
+        .action-button svg {
+            width: 18px;
+            height: 18px;
+            stroke: white;
+            stroke-width: 2;
+            fill: none;
+        }
+
+        .action-button:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+
+        .action-button.selected {
+            background: white;
+            border-color: white;
+            color: black;
+        }
+
+        .action-button.selected svg {
+            stroke: black;
+        }
+
+        .action-button:active {
+            background: white;
+            border-color: white;
+            color: black;
+            transform: scale(0.98);
+        }
+
+        .action-button:active svg {
+            stroke: black;
+        }
+
+        /* Radio Buttons */
+        .radio-options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .radio-option {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 12px 16px;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .radio-option:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .radio-option.selected {
+            background: rgba(38, 96, 146, 0.3);
+            border-color: rgba(38, 96, 146, 0.8);
+        }
+
+        .radio-circle {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .radio-option.selected .radio-circle {
+            border-color: #266092;
+        }
+
+        .radio-option.selected .radio-circle::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 10px;
+            height: 10px;
+            background: #266092;
+            border-radius: 50%;
+        }
+
+        .input-area.hidden {
+            display: none !important;
+        }
+
+        /* Option Cards */
+        .option-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 0px;
+            margin-top: 12px;
+        }
+
+        .option-card {
+            background: linear-gradient(135deg, #14355a 0%, #0c233f 100%);
+            border-radius: 16px;
+            padding: 16px;
+            display: flex;
+            align-items: stretch;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0px 8px 24px 0px rgba(0, 0, 0, 0.2);
+            min-height: 115px;
+        }
+
+        .option-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0px 12px 32px 0px rgba(0, 0, 0, 0.3);
+        }
+
+        .option-card-image {
+            width: 40%;
+            position: relative;
+            overflow: hidden;
+            flex-shrink: 0;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .option-card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+            padding: 0;
+        }
+
+        .option-card-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0;
+            margin-left: 12px;
+            gap: 4px;
+        }
+
+        .option-card-title {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            color: white;
+            letter-spacing: -0.3px;
+            line-height: 1.1;
+        }
+
+        .option-card-price {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 12px;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.75);
+            letter-spacing: -0.24px;
+            line-height: 1.2;
+            margin-top: 0px;
+        }
+
+        .option-card-wrapper {
+            margin-bottom: 16px;
+        }
+
+        .option-card-description {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 12px;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.65);
+            letter-spacing: -0.24px;
+            line-height: 1.4;
+            margin-top: 8px;
+            padding-left: 4px;
+        }
+
+        .option-card-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 14px;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.85);
+            margin-top: 8px;
+        }
+
+        .option-card-badge svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background-color: #f0f;
+            position: absolute;
+            animation: confetti-fall 2s ease-out forwards;
+            z-index: 10000;
+        }
+
+        @keyframes confetti-fall {
+            to {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-container">
+        <!-- Side Buttons -->
+        <div class="side-button mute-switch"></div>
+        <div class="side-button volume-up"></div>
+        <div class="side-button volume-down"></div>
+        <div class="side-button power-button"></div>
+
+        <!-- Dynamic Island -->
+        <div class="dynamic-island"></div>
+
+        <div class="phone-frame">
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <div class="time">9:41</div>
+            <div class="indicators">
+                <svg class="cellular-icon" width="19" height="12" viewBox="0 0 19 12" fill="white" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="0" y="6" width="4" height="6" rx="1"/>
+                    <rect x="5" y="4" width="4" height="8" rx="1"/>
+                    <rect x="10" y="2" width="4" height="10" rx="1"/>
+                    <rect x="15" y="0" width="4" height="12" rx="1"/>
+                </svg>
+                <svg class="wifi-icon" width="17" height="12" viewBox="0 0 17 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="8.5" cy="11" r="1.5" fill="white"/>
+                    <path d="M5 8C6.1 6.9 7.2 6.5 8.5 6.5C9.8 6.5 10.9 6.9 12 8" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+                    <path d="M2 5C4 3 6 2 8.5 2C11 2 13 3 15 5" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+                <svg class="battery-icon" width="27" height="13" viewBox="0 0 27 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="0.5" y="0.5" width="22" height="12" rx="3.5" stroke="white" stroke-opacity="0.35"/>
+                    <rect x="2" y="2" width="17" height="9" rx="2" fill="white"/>
+                    <path d="M23.5 4.5V8.5C24.8 8 25.5 7.2 25.5 6.5C25.5 5.8 24.8 5 23.5 4.5Z" fill="white" fill-opacity="0.4"/>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Header -->
+        <div class="header">
+            <div class="header-controls">
+                <div class="glass-button" onclick="handleBack()">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M15 18l-6-6 6-6" />
+                    </svg>
+                </div>
+                <div class="glass-button" onclick="handleMenu()">
+                    <svg viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="1" fill="white" />
+                        <circle cx="12" cy="6" r="1" fill="white" />
+                        <circle cx="12" cy="18" r="1" fill="white" />
+                    </svg>
+                </div>
+            </div>
+            <div class="header-title">
+                <h1>CRUNCH AI</h1>
+                <p>Season Ticket Renewal</p>
+            </div>
+        </div>
+
+        <!-- Chat Area -->
+        <div class="chat-area" id="chatArea">
+            <div class="message" id="loadingMessage" style="display: none;">
+                <div class="avatar loading">
+                    <img src="../images/crunch-avatar.png" alt="Crunch AI">
+                </div>
+                <div class="typing-indicator active">
+                    <span class="basketball">🏀</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Input Area -->
+        <div class="input-area">
+            <div class="add-button" onclick="handleAdd()">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 5v14M5 12h14" />
+                </svg>
+            </div>
+            <div class="input-container" id="inputContainer">
+                <input
+                    type="text"
+                    id="messageInput"
+                    placeholder="Ask Crunch anything..."
+                    onfocus="handleInputFocus()"
+                    onblur="handleInputBlur()"
+                    oninput="handleInputChange()"
+                    onkeypress="handleKeyPress(event)"
+                />
+                <div class="input-actions">
+                    <div class="mic-button" id="micButton" onclick="handleVoice()">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
+                            <path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v4M8 23h8" />
+                        </svg>
+                    </div>
+                    <div class="send-button" id="sendButton" onclick="handleSend()">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M8 13V3M8 3L4 7M8 3L12 7" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Home Indicator -->
+        <div class="home-indicator"></div>
+
+        <!-- Instructions -->
+        <div class="instructions" id="instructions">
+            Loading season ticket renewal demo...
+        </div>
+        </div>
+    </div>
+
+    <script>
+        const chatArea = document.getElementById('chatArea');
+        const messageInput = document.getElementById('messageInput');
+        const inputContainer = document.getElementById('inputContainer');
+        const sendButton = document.getElementById('sendButton');
+        const micButton = document.getElementById('micButton');
+        const loadingMessage = document.getElementById('loadingMessage');
+        const instructions = document.getElementById('instructions');
+        const inputArea = document.querySelector('.input-area');
+
+        let currentStep = 0;
+        let selectedPaymentType = null;
+        let selectedCard = null;
+        let selectedSize = null;
+        let awaitingPaymentCardConfirmation = false;
+
+        function handleButtonClick(button) {
+            // Add selected class to clicked button
+            const siblings = button.parentElement.querySelectorAll('.action-button');
+            siblings.forEach(btn => btn.classList.remove('selected'));
+            button.classList.add('selected');
+        }
+
+        function showLoading() {
+            chatArea.appendChild(loadingMessage);
+            loadingMessage.style.display = 'flex';
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }
+
+        function hideLoading() {
+            loadingMessage.style.display = 'none';
+        }
+
+        function triggerConfetti() {
+            const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ffeaa7', '#dfe6e9', '#74b9ff'];
+            const confettiCount = 100;
+            const phoneFrame = document.querySelector('.phone-frame');
+
+            for (let i = 0; i < confettiCount; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.top = '-10px';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.animationDelay = Math.random() * 0.3 + 's';
+                confetti.style.animationDuration = (Math.random() * 1 + 1.5) + 's';
+                phoneFrame.appendChild(confetti);
+
+                // Remove confetti after animation
+                setTimeout(() => {
+                    confetti.remove();
+                }, 2500);
+            }
+        }
+
+        function addMessage(text, sender, buttons = null, radioOptions = null) {
+            const message = document.createElement('div');
+            message.className = `message ${sender}`;
+
+            let content = text;
+
+            if (sender === 'ai') {
+                message.innerHTML = `
+                    <div class="message-content">
+                        ${content}
+                        ${buttons ? `<div class="action-buttons">${buttons.map(btn =>
+                            `<button class="action-button" onclick='handleButtonClick(this); ${btn.action.replace(/"/g, '&quot;')}'>${btn.icon || ''}${btn.label}</button>`
+                        ).join('')}</div>` : ''}
+                        ${radioOptions ? `<div class="radio-options">${radioOptions.map((opt, idx) =>
+                            `<div class="radio-option" onclick="selectRadio(this, '${opt.value}', '${opt.group}')" data-group="${opt.group}">
+                                <div class="radio-circle"></div>
+                                <span>${opt.label}</span>
+                            </div>`
+                        ).join('')}</div>` : ''}
+                    </div>
+                `;
+            } else {
+                message.innerHTML = `
+                    <div class="message-content">${content}</div>
+                    <div class="avatar">👤</div>
+                `;
+            }
+
+            chatArea.appendChild(message);
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }
+
+        function addUserMessage(text) {
+            addMessage(text, 'user');
+        }
+
+        function selectRadio(element, value, group) {
+            // Deselect all in the same group
+            const groupElements = document.querySelectorAll(`.radio-option[data-group="${group}"]`);
+            groupElements.forEach(el => el.classList.remove('selected'));
+
+            // Select clicked option
+            element.classList.add('selected');
+
+            // Store selection based on group
+            if (group === 'payment') {
+                selectedPaymentType = value;
+                showPaymentMethodOptions();
+            } else if (group === 'card') {
+                selectedCard = value;
+            } else if (group === 'size') {
+                selectedSize = value;
+            }
+        }
+
+        // Script Flow Functions
+        function step1_ChangeMembership() {
+            addUserMessage('Change Membership');
+            showLoading();
+            setTimeout(() => {
+                hideLoading();
+                addMessage('No problem. What are you looking to change up this year?', 'ai');
+                // Auto-populate next response
+                messageInput.value = 'I only make it to maybe 25 games a year, and it\'s stressful to resell the remaining tickets. I want to go to that many games, but just want more flexibility';
+            }, 1500);
+        }
+
+        function step2_SendFlexibility() {
+            const message = messageInput.value.trim();
+            if (!message) return;
+
+            addUserMessage(message);
+            messageInput.value = '';
+            currentStep = 2;
+
+            showLoading();
+            setTimeout(() => {
+                hideLoading();
+                addMessage('Makes sense. Yeah, you attended 24 games last season, and resold 80% of the remaining tickets.', 'ai');
+                setTimeout(() => {
+                    const optionsHTML = `
+                        You've got some options:
+                        <div class="option-cards">
+                            <div class="option-card-wrapper">
+                                <div class="option-card" onclick="selectHalfSeason()">
+                                    <div class="option-card-image">
+                                        <img src="../images/half-season.png" alt="Half Season Player">
+                                    </div>
+                                    <div class="option-card-content">
+                                        <div class="option-card-title">Half Season Plan</div>
+                                        <div class="option-card-price">$225 per game/per seat</div>
+                                    </div>
+                                </div>
+                                <div class="option-card-description">20 games with similar seats to your current location</div>
+                            </div>
+                            <div class="option-card-wrapper">
+                                <div class="option-card" onclick="selectFullSubscription()">
+                                    <div class="option-card-image">
+                                        <img src="../images/full-season-subscription.png" alt="Full Season Player">
+                                    </div>
+                                    <div class="option-card-content">
+                                        <div class="option-card-title">Full Season Subscription</div>
+                                        <div class="option-card-price">$150 per game/per seat</div>
+                                    </div>
+                                </div>
+                                <div class="option-card-description">Attend any game with RSVP 24 hours ahead of tip off. Similar seats, but no resale</div>
+                            </div>
+                        </div>
+                    `;
+                    addMessage(optionsHTML, 'ai');
+                    // Auto-populate next response
+                    messageInput.value = 'The subscription sounds interesting. Help me understand the details and the math.';
+                }, 1500);
+            }, 1500);
+        }
+
+        function selectHalfSeason() {
+            addUserMessage('Half Season Plan');
+            showLoading();
+            setTimeout(() => {
+                hideLoading();
+                addMessage('Great choice! The half season plan gives you 20 games with similar seats to your current location. I can help you select which games you\'d like.', 'ai');
+            }, 1500);
+        }
+
+        function selectFullSubscription() {
+            addUserMessage('Full Season Subscription');
+            currentStep = 2;
+            messageInput.value = 'The subscription sounds interesting. Help me understand the details and the math.';
+            // Trigger the next step
+            setTimeout(() => {
+                step3_AskMath();
+            }, 100);
+        }
+
+        function step3_AskMath() {
+            const message = messageInput.value.trim();
+            if (!message) return;
+
+            addUserMessage(message);
+            messageInput.value = '';
+            currentStep = 3;
+
+            showLoading();
+            setTimeout(() => {
+                hideLoading();
+                addMessage('Sure thing. Think about it like a "go any time" pass. If there\'s a game, just RSVP 24+ hours before. The tickets are for you +1. You can transfer one ticket to a guest, but you can\'t resell after you RSVP.', 'ai');
+                setTimeout(() => {
+                    addMessage('In terms of cost, it\'s much cheaper than the season ticket if you make it to all games ($170 vs. $210). Even if you only make to 30 games, your cost per seat is the same as the half season plan ($225)', 'ai');
+                    // Auto-populate next response
+                    messageInput.value = 'What seats will I be in with a subscription?';
+                }, 1500);
+            }, 1500);
+        }
+
+        function step4_AskSeats() {
+            const message = messageInput.value.trim();
+            if (!message) return;
+
+            addUserMessage(message);
+            messageInput.value = '';
+            currentStep = 4;
+
+            showLoading();
+            setTimeout(() => {
+                hideLoading();
+                addMessage('You\'ll be assigned a seat of comparable quality to your current season tickets, in the last 5 rows of the lower bowl. The distribution plan ensures fans with subscriptions get a variety of views across games', 'ai');
+                // Auto-populate next response
+                messageInput.value = 'What happens if I RSVP but then can\'t make it?';
+            }, 1500);
+        }
+
+        function step5_AskNoShow() {
+            const message = messageInput.value.trim();
+            if (!message) return;
+
+            addUserMessage(message);
+            messageInput.value = '';
+            currentStep = 5;
+
+            showLoading();
+            setTimeout(() => {
+                hideLoading();
+                addMessage('If you don\'t scan in by the half, your tickets will be released, and you\'ll be charged a fee of 25% of your per game per ticket cost. The team wants to fill every seat, and this helps', 'ai');
+                // Auto-populate next response
+                messageInput.value = 'Are there any other benefits with a subscription?';
+            }, 1500);
+        }
+
+        function step6_AskBenefits() {
+            const message = messageInput.value.trim();
+            if (!message) return;
+
+            addUserMessage(message);
+            messageInput.value = '';
+            currentStep = 6;
+
+            showLoading();
+            setTimeout(() => {
+                hideLoading();
+                addMessage('Yeah! It\'s similar to your season ticket membership:<br><br>• $1,000 in Court Cash to spend on merch and concessions<br>• Backcourt Club access, with included food and drinks<br>• 20% off upgrades, and 2 free seat upgrades<br><br><a href="#" style="color: #60a5fa;">See full benefits here</a>', 'ai');
+                // Auto-populate next response
+                messageInput.value = 'This sounds great! No more stressing over resell, and I\'ll have the option to be at every game. Can\'t miss Lebron in his final season!';
+            }, 1500);
+        }
+
+        function step7_Excited() {
+            const message = messageInput.value.trim();
+            if (!message) return;
+
+            addUserMessage(message);
+            messageInput.value = '';
+            currentStep = 0;
+
+            showLoading();
+            setTimeout(() => {
+                hideLoading();
+                addMessage('Do you want to proceed with the subscription for next season?', 'ai', [
+                    { label: 'Yes', action: 'step8_Yes()', icon: '<svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>' },
+                    { label: 'Need Time To Decide', action: 'step8_NeedTime()', icon: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>' },
+                    { label: 'No', action: 'step8_No()', icon: '<svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>' }
+                ]);
+            }, 1500);
+        }
+
+        function step8_Yes() {
+            addUserMessage('Yes');
+            showLoading();
+            setTimeout(() => {
+                hideLoading();
+                addMessage('Sounds good. How do you want to pay?', 'ai', null, [
+                    { label: 'Pay Full Amount: $13,940', value: 'full', group: 'payment' },
+                    { label: 'Payment Plan: 10% Upfront, 10% each month for 9 months', value: 'plan', group: 'payment' }
+                ]);
+            }, 1500);
+        }
+
+        let confirmButtonShown = false;
+
+        function selectPaymentCard(card) {
+            selectedCard = card;
+            checkPaymentSelections();
+        }
+
+        function checkPaymentSelections() {
+            if (selectedPaymentType && selectedCard && !confirmButtonShown) {
+                confirmButtonShown = true;
+                awaitingPaymentCardConfirmation = true;
+                // Both selections made, ask for confirmation
+                setTimeout(() => {
+                    const cardLabels = {
+                        'amex': 'AmEx x7921',
+                        'new': 'New Card',
+                        'ach': 'ACH'
+                    };
+                    addMessage(`Ready to confirm payment with ${cardLabels[selectedCard]}?`, 'ai');
+                    // Pre-fill the input with "yes"
+                    messageInput.value = 'yes';
+                    messageInput.focus();
+                }, 300);
+            }
+        }
+
+        function showPaymentMethodOptions() {
+            // Auto-select AmEx saved card
+            selectedCard = 'amex';
+            awaitingPaymentCardConfirmation = true;
+
+            setTimeout(() => {
+                addMessage('Do you want me to use your saved card (AmEx x7921)?', 'ai');
+                // Pre-fill the input with "yes"
+                messageInput.value = 'yes';
+                messageInput.focus();
+            }, 500);
+        }
+
+        function confirmPaymentAndProceed() {
+            const cardLabels = {
+                'amex': 'AmEx x7921',
+                'new': 'New Card',
+                'ach': 'ACH'
+            };
+            const paymentLabel = selectedPaymentType === 'full' ? 'Pay Full Amount' : 'Payment Plan';
+            addUserMessage(`${cardLabels[selectedCard]} • ${paymentLabel}`);
+
+            // Reset for next time
+            confirmButtonShown = false;
+            selectedPaymentType = null;
+            selectedCard = null;
+
+            showLoading();
+            setTimeout(() => {
+                hideLoading();
+                addMessage('Great choice, you\'re all set for your membership next year!', 'ai');
+                setTimeout(() => {
+                    addMessage('Early subscribers like you get guaranteed access to the next UNRL capsule drop for an exclusive Wolves hoodie dropping during pre-season. Cost is $200 for subscribers ($250 for others). Interested?<br><br><img src="../images/unrl.png" alt="UNRL Wolves Hoodie" style="width: 100%; max-width: 300px; border-radius: 8px; margin-top: 10px;">', 'ai', [
+                        { label: 'Yes please', action: 'step9_MerchYes()', icon: '<svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>' },
+                        { label: 'No thanks', action: 'step9_MerchNo()', icon: '<svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>' }
+                    ]);
+                }, 1500);
+            }, 1500);
+        }
+
+        function step8_NeedTime() {
+            addUserMessage('Need Time To Decide');
+            showLoading();
+            setTimeout(() => {
+                hideLoading();
+                addMessage('No problem! Take your time. Your renewal deadline is January 27th. I\'ll check in with you before then.', 'ai');
+            }, 1500);
+        }
+
+        function step8_No() {
+            addUserMessage('No');
+            showLoading();
+            setTimeout(() => {
+                hideLoading();
+                addMessage('No worries! Let me know if you change your mind or if there\'s anything else I can help with.', 'ai');
+            }, 1500);
+        }
+
+        function selectCardAndProceed(card) {
+            selectedCard = card;
+            const cardLabels = {
+                'amex': 'AmEx x7921',
+                'new': 'New Card',
+                'ach': 'ACH'
+            };
+            addUserMessage(cardLabels[card] + (selectedPaymentType ? ' • ' + (selectedPaymentType === 'full' ? 'Pay Full Amount' : 'Payment Plan') : ''));
+
+            showLoading();
+            setTimeout(() => {
+                hideLoading();
+                addMessage('Great choice, you\'re all set for your membership next year!', 'ai');
+                setTimeout(() => {
+                    addMessage('Early subscribers like you get guaranteed access to the next UNRL capsule drop for an exclusive Wolves hoodie dropping during pre-season. Cost is $200 for subscribers ($250 for others). Interested?<br><br><img src="../images/unrl.png" alt="UNRL Wolves Hoodie" style="width: 100%; max-width: 300px; border-radius: 8px; margin-top: 10px;">', 'ai', [
+                        { label: 'Yes please', action: 'step9_MerchYes()', icon: '<svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>' },
+                        { label: 'No thanks', action: 'step9_MerchNo()', icon: '<svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>' }
+                    ]);
+                }, 1500);
+            }, 1500);
+        }
+
+        function step9_MerchYes() {
+            addUserMessage('Yes please');
+            showLoading();
+            setTimeout(() => {
+                hideLoading();
+                addMessage('I have your size saved as Men\'s Medium. Use this size for the order?', 'ai', [
+                    { label: 'Men\'s Medium', action: 'step10_ConfirmSize("medium")', icon: '<svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>' },
+                    { label: 'Other Size', action: 'step10_OtherSize()', icon: '<svg viewBox="0 0 24 24"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>' }
+                ]);
+            }, 1500);
+        }
+
+        function step9_MerchNo() {
+            addUserMessage('No thanks');
+            showLoading();
+            setTimeout(() => {
+                hideLoading();
+                addMessage('No problem! Anything else I can help you with today?', 'ai');
+            }, 1500);
+        }
+
+        function step10_ConfirmSize(size) {
+            addUserMessage('Men\'s Medium');
+            showLoading();
+            setTimeout(() => {
+                hideLoading();
+                addMessage('How do you want to pay? Note that your card won\'t be charged until the order is placed', 'ai', [
+                    { label: 'Saved Card: AmEx x7921', action: 'step11_FinalPayment("amex")', icon: '<svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>' },
+                    { label: 'New Card', action: 'step11_FinalPayment("new")', icon: '<svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M12 14h6"/></svg>' }
+                ]);
+            }, 1500);
+        }
+
+        function step10_OtherSize() {
+            addUserMessage('Other Size');
+            showLoading();
+            setTimeout(() => {
+                hideLoading();
+                addMessage('What size would you like?', 'ai');
+                // Auto-populate next response
+                messageInput.value = 'Men\'s Large';
+            }, 1500);
+        }
+
+        function step11_FinalPayment(card) {
+            const cardLabel = card === 'amex' ? 'AmEx x7921' : 'New Card';
+            addUserMessage(cardLabel);
+            showLoading();
+            setTimeout(() => {
+                hideLoading();
+                addMessage('Your order has been reserved. Check your email for a confirmation', 'ai');
+                triggerConfetti();
+                setTimeout(() => {
+                    addMessage('Anything else I can help you with today?', 'ai');
+                    }, 1500);
+            }, 1500);
+        }
+
+        function handleInputFocus() {
+            inputContainer.classList.add('focused');
+            instructions.style.display = 'none';
+        }
+
+        function handleInputBlur() {
+            if (!messageInput.value) {
+                inputContainer.classList.remove('focused');
+            }
+        }
+
+        function handleInputChange() {
+            // Both buttons remain visible at all times
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter' && messageInput.value.trim()) {
+                handleSend();
+            }
+        }
+
+        function handleSend() {
+            const message = messageInput.value.trim();
+            if (!message) return;
+
+            // Check if we're waiting for payment card confirmation
+            if (awaitingPaymentCardConfirmation) {
+                const lowerMessage = message.toLowerCase();
+                if (lowerMessage === 'yes' || lowerMessage === 'y' || lowerMessage === 'sure' || lowerMessage === 'ok') {
+                    addUserMessage(message);
+                    messageInput.value = '';
+                    awaitingPaymentCardConfirmation = false;
+                    confirmPaymentAndProceed();
+                    return;
+                } else {
+                    // Handle "no" or other responses
+                    addUserMessage(message);
+                    messageInput.value = '';
+                    awaitingPaymentCardConfirmation = false;
+                    selectedCard = null;
+                    showLoading();
+                    setTimeout(() => {
+                        hideLoading();
+                        addMessage('No problem. Which payment method would you prefer?', 'ai', [
+                            { label: 'Saved Card: AmEx x7921', action: 'selectPaymentCard("amex")', icon: '<svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>' },
+                            { label: 'New Card', action: 'selectPaymentCard("new")', icon: '<svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M12 14h6"/></svg>' },
+                            { label: 'ACH', action: 'selectPaymentCard("ach")', icon: '<svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>' }
+                        ]);
+                    }, 500);
+                    return;
+                }
+            }
+
+            // Route to appropriate step based on currentStep
+            if (currentStep === 1) {
+                step2_SendFlexibility();
+            } else if (currentStep === 2) {
+                step3_AskMath();
+            } else if (currentStep === 3) {
+                step4_AskSeats();
+            } else if (currentStep === 4) {
+                step5_AskNoShow();
+            } else if (currentStep === 5) {
+                step6_AskBenefits();
+            } else if (currentStep === 6) {
+                step7_Excited();
+            } else {
+                // Default fallback - send message without hiding input
+                addUserMessage(message);
+                messageInput.value = '';
+                showLoading();
+                setTimeout(() => {
+                    hideLoading();
+                    addMessage('I\'m here to help! Is there anything else you\'d like to know?', 'ai');
+                }, 1500);
+            }
+        }
+
+        function handleVoice() {
+            const voiceInstruction = document.createElement('div');
+            voiceInstruction.className = 'instructions';
+            voiceInstruction.textContent = '🎤 Voice input';
+            voiceInstruction.style.bottom = '120px';
+            document.querySelector('.phone-frame').appendChild(voiceInstruction);
+
+            setTimeout(() => {
+                voiceInstruction.remove();
+            }, 2000);
+        }
+
+        function handleAdd() {
+            const addInstruction = document.createElement('div');
+            addInstruction.className = 'instructions';
+            addInstruction.textContent = 'Add attachments';
+            addInstruction.style.bottom = '120px';
+            document.querySelector('.phone-frame').appendChild(addInstruction);
+
+            setTimeout(() => {
+                addInstruction.remove();
+            }, 2000);
+        }
+
+        function handleBack() {
+            const backInstruction = document.createElement('div');
+            backInstruction.className = 'instructions';
+            backInstruction.textContent = 'Back to previous screen';
+            backInstruction.style.bottom = '120px';
+            document.querySelector('.phone-frame').appendChild(backInstruction);
+
+            setTimeout(() => {
+                backInstruction.remove();
+            }, 2000);
+        }
+
+        function handleMenu() {
+            const menuInstruction = document.createElement('div');
+            menuInstruction.className = 'instructions';
+            menuInstruction.textContent = 'More options menu';
+            menuInstruction.style.bottom = '120px';
+            document.querySelector('.phone-frame').appendChild(menuInstruction);
+
+            setTimeout(() => {
+                menuInstruction.remove();
+            }, 2000);
+        }
+
+        // Start the demo
+        function startDemo() {
+            instructions.style.display = 'none';
+
+            showLoading();
+            setTimeout(() => {
+                hideLoading();
+                addMessage('Hey Nick, your season tickets are set to auto-renew on Wednesday, Jan 27th.', 'ai');
+                setTimeout(() => {
+                    addMessage('For the same seats:<br><br><strong>Section 110, Row T, Seats 4-5</strong><br><br>Your 2027-28 season prices are:<br>• $210 per seat per game<br>• $17,220 total<br><img src="../images/vfs.png" class="seat-image" alt="Section 110 View">', 'ai');
+                    setTimeout(() => {
+                        addMessage('What do you want to do?', 'ai', [
+                            { label: 'Keep Seats', action: 'keepSeats()', icon: '<svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>' },
+                            { label: 'Move Seats', action: 'moveSeats()', icon: '<svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>' },
+                            { label: 'Change Membership', action: 'step1_ChangeMembership(); currentStep = 1;', icon: '<svg viewBox="0 0 24 24"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/></svg>' },
+                            { label: 'Cancel Renewal', action: 'cancelRenewal()', icon: '<svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>' }
+                        ]);
+                    }, 1500);
+                }, 1500);
+            }, 1500);
+        }
+
+        function keepSeats() {
+            addUserMessage('Keep Seats');
+            showLoading();
+            setTimeout(() => {
+                hideLoading();
+                addMessage('Great! Your seats are confirmed for the 2027-28 season.', 'ai');
+            }, 1500);
+        }
+
+        function moveSeats() {
+            addUserMessage('Move Seats');
+            showLoading();
+            setTimeout(() => {
+                hideLoading();
+                addMessage('Sure! Let me help you explore available seats in other sections.', 'ai');
+            }, 1500);
+        }
+
+        function cancelRenewal() {
+            addUserMessage('Cancel Renewal');
+            showLoading();
+            setTimeout(() => {
+                hideLoading();
+                addMessage('I understand. Your auto-renewal has been cancelled. We\'d love to have you back next season!', 'ai');
+            }, 1500);
+        }
+
+        // Auto-start demo after 2 seconds
+        setTimeout(startDemo, 2000);
+    </script>
+</body>
+</html>

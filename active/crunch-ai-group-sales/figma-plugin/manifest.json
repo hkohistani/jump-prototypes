@@ -1,0 +1,10 @@
+{
+  "name": "Crunch AI – Group Sales Screens",
+  "id": "crunch-ai-group-sales-importer",
+  "api": "1.0.0",
+  "main": "code.js",
+  "editorType": ["figma"],
+  "networkAccess": {
+    "allowedDomains": ["http://localhost:3333"]
+  }
+}

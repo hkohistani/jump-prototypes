@@ -1,0 +1,2442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+    <title>Crunch AI - Group Sales</title>
+    <style>
+        @font-face {
+            font-family: 'Futura Wolves Autocaps';
+            src: url('/Users/hammedkohistani/Desktop/airds/public/fonts/Futura_Wolves_Autocaps.otf') format('opentype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .phone-container {
+            position: relative;
+            width: 413px;
+            height: 872px;
+            background: linear-gradient(145deg, #2c2c2c 0%, #1a1a1a 100%);
+            border-radius: 55px;
+            padding: 10px;
+            box-shadow:
+                0 30px 80px rgba(0, 0, 0, 0.8),
+                inset 0 0 0 2px rgba(255, 255, 255, 0.1),
+                inset 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Side Buttons */
+        .side-button {
+            position: absolute;
+            background: linear-gradient(90deg, #1a1a1a 0%, #2c2c2c 100%);
+            border-radius: 2px;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .volume-up {
+            left: -3px;
+            top: 160px;
+            width: 3px;
+            height: 60px;
+        }
+
+        .volume-down {
+            left: -3px;
+            top: 230px;
+            width: 3px;
+            height: 60px;
+        }
+
+        .mute-switch {
+            left: -3px;
+            top: 110px;
+            width: 3px;
+            height: 35px;
+        }
+
+        .power-button {
+            right: -3px;
+            top: 180px;
+            width: 3px;
+            height: 90px;
+        }
+
+        /* Dynamic Island */
+        .dynamic-island {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 126px;
+            height: 37px;
+            background: #000;
+            border-radius: 20px;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+        }
+
+        .dynamic-island::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: 12px;
+            transform: translateY(-50%);
+            width: 10px;
+            height: 10px;
+            background: radial-gradient(circle, #1e3a8a 0%, #1e40af 100%);
+            border-radius: 50%;
+            box-shadow: 0 0 8px rgba(59, 130, 246, 0.6);
+        }
+
+        .phone-frame {
+            width: 393px;
+            height: 852px;
+            background: #081627;
+            border-radius: 45px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Status Bar */
+        .status-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 18px 25px 0;
+            z-index: 10;
+        }
+
+        .status-bar .time {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro", sans-serif;
+            font-size: 17px;
+            font-weight: 600;
+            line-height: 22px;
+            color: #fff;
+            text-align: left;
+        }
+
+        .status-bar .indicators {
+            display: flex;
+            gap: 7px;
+            align-items: center;
+            height: 22px;
+        }
+
+        .status-bar .indicators img {
+            display: block;
+        }
+
+        .status-bar .cellular-icon {
+            width: 19.2px;
+            height: 12.226px;
+        }
+
+        .status-bar .wifi-icon {
+            width: 17.142px;
+            height: 12.328px;
+        }
+
+        .status-bar .battery-icon {
+            width: 27.328px;
+            height: 13px;
+        }
+
+        /* Header */
+        .header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 154px;
+            background: linear-gradient(180deg, rgba(5, 14, 25, 0.94) 0%, rgba(5, 14, 25, 0.65) 24%, rgba(8, 22, 39, 0) 100%);
+            z-index: 5;
+        }
+
+        .header-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 62px 16px 0;
+        }
+
+        .glass-button {
+            width: 48px;
+            height: 48px;
+            border-radius: 100px;
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .glass-button:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: scale(1.05);
+        }
+
+        .glass-button svg {
+            width: 24px;
+            height: 24px;
+            stroke: white;
+            stroke-width: 2;
+            fill: none;
+        }
+
+        .header-title {
+            position: absolute;
+            top: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            padding-bottom: 2px;
+        }
+
+        .header-title h1 {
+            font-family: 'Futura Wolves Autocaps', 'Futura', 'Futura PT', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 22px;
+            font-weight: normal;
+            font-style: normal;
+            line-height: 20px;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: -0.11px;
+            margin-bottom: 4px;
+        }
+
+        .header-title p {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 12px;
+            font-weight: 400;
+            font-style: normal;
+            line-height: 1;
+            color: rgba(255, 255, 255, 0.75);
+            letter-spacing: -0.24px;
+        }
+
+        /* Chat Area */
+        .chat-area {
+            position: absolute;
+            top: 134px;
+            left: 0;
+            right: 0;
+            bottom: 100px;
+            overflow-y: auto;
+            padding: 20px 16px;
+        }
+
+        /* Custom Scrollbar */
+        .chat-area::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-area::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .chat-area::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+
+        .chat-area::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Firefox */
+        .chat-area {
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+        }
+
+        .message {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: messageSlideIn 0.3s forwards;
+        }
+
+        @keyframes messageSlideIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #266092;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .avatar.loading {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .message-content {
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+            color: white;
+            font-size: 15px;
+            line-height: 1.4;
+            padding: 0;
+        }
+
+        .message.user {
+            justify-content: flex-end;
+            flex-direction: row;
+        }
+
+        .message.user + .message.user {
+            margin-top: -14px;
+        }
+
+        .message.user .message-content {
+            flex: 0 1 auto;
+            max-width: 80%;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
+            padding: 12px 16px;
+            margin-left: auto;
+        }
+
+        .message.user .avatar {
+            display: none;
+        }
+
+        .message-content img.seat-image {
+            width: 100%;
+            border-radius: 12px;
+            margin-top: 12px;
+            display: block;
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+        }
+
+        .message.user .message-content {
+            background: rgba(38, 96, 146, 0.3);
+        }
+
+        /* Input Area */
+        .input-area {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 16px 16px 32px 16px;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            background: linear-gradient(180deg, rgba(8, 22, 39, 0) 0%, rgba(8, 22, 39, 1) 20%);
+        }
+
+        .add-button {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .add-button:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: scale(1.05);
+        }
+
+        .add-button svg {
+            width: 24px;
+            height: 24px;
+            stroke: white;
+            stroke-width: 2;
+        }
+
+        .input-container {
+            flex: 1;
+            position: relative;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border-radius: 28px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            height: 56px;
+            display: flex;
+            align-items: center;
+            padding: 0 64px 0 20px;
+            transition: all 0.3s;
+        }
+
+        .input-container.focused {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .input-container input {
+            flex: 1;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 14px;
+            outline: none;
+            padding-right: 10px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .input-container input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .input-actions {
+            position: absolute;
+            right: 8px;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .mic-button, .send-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .mic-button {
+            background: none;
+            display: none;
+        }
+
+        .mic-button:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .send-button {
+            background: #79BC43;
+            transition: all 0.2s;
+        }
+
+        .send-button:hover {
+            background: #6aa93a;
+            transform: scale(1.05);
+        }
+
+        .mic-button svg {
+            width: 20px;
+            height: 20px;
+            stroke: white;
+            stroke-width: 2;
+            fill: none;
+        }
+
+        .send-button svg {
+            width: 24px;
+            height: 24px;
+            stroke: none;
+            fill: none;
+        }
+
+        .send-button img {
+            width: 16px;
+            height: 16px;
+            filter: brightness(0) saturate(0);
+            opacity: 1;
+        }
+
+        /* Home Indicator */
+        .home-indicator {
+            position: absolute;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 139px;
+            height: 5px;
+            background: white;
+            border-radius: 100px;
+        }
+
+        /* Typing Indicator */
+        .typing-indicator {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 16px;
+        }
+
+        .typing-indicator.active {
+            display: flex;
+        }
+
+        .typing-indicator .basketball {
+            font-size: 24px;
+            animation: bounce 0.8s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-12px);
+            }
+        }
+
+        /* Instructions Overlay */
+        .instructions {
+            position: absolute;
+            bottom: 120px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 20px;
+            font-size: 13px;
+            text-align: center;
+            animation: fadeInOut 3s forwards;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0; }
+            10%, 90% { opacity: 1; }
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .action-button {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            padding: 12px 24px;
+            color: white;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: -0.28px;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+            width: 100%;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 8px;
+        }
+
+        .action-button svg {
+            width: 18px;
+            height: 18px;
+            stroke: white;
+            stroke-width: 2;
+            fill: none;
+        }
+
+        .action-button:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+
+        .action-button.selected {
+            background: white;
+            border-color: white;
+            color: black;
+        }
+
+        .action-button.selected svg {
+            stroke: black;
+        }
+
+        .action-button:active {
+            background: white;
+            border-color: white;
+            color: black;
+            transform: scale(0.98);
+        }
+
+        .action-button:active svg {
+            stroke: black;
+        }
+
+        /* Radio Buttons */
+        .radio-options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .radio-option {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 12px 16px;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .radio-option:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .radio-option.selected {
+            background: rgba(38, 96, 146, 0.3);
+            border-color: rgba(38, 96, 146, 0.8);
+        }
+
+        .radio-circle {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .radio-option.selected .radio-circle {
+            border-color: #266092;
+        }
+
+        .radio-option.selected .radio-circle::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 10px;
+            height: 10px;
+            background: #266092;
+            border-radius: 50%;
+        }
+
+        .input-area.hidden {
+            display: none !important;
+        }
+
+        /* Option Cards */
+        .option-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 12px;
+            margin-right: 8px;
+        }
+
+        .option-card {
+            background: #0f2340;
+            border-radius: 16px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: border-color 0.2s;
+            overflow: hidden;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+
+        .option-card:hover { opacity: 0.9; }
+
+        .option-card.selected {
+            border: 2px solid #79BC43;
+        }
+
+        .option-card.selected .option-card-radio {
+            border-color: #79BC43;
+            background: #79BC43;
+            box-shadow: inset 0 0 0 4px #0f2340;
+        }
+
+        .option-card-img-wrap {
+            position: relative;
+            flex-shrink: 0;
+            padding: 12px 0 12px 12px;
+        }
+        .option-card-img-wrap img {
+            width: 108px;
+            height: 68px;
+            object-fit: cover;
+            border-radius: 10px;
+            display: block;
+        }
+        .option-card-expand {
+            position: absolute; bottom: 14px; right: 10px;
+            width: 32px; height: 32px;
+            background: rgba(0,0,0,0.72); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .option-card-expand svg { width: 14px; height: 14px; stroke: white; fill: none; stroke-width: 2; }
+
+        .option-card-body {
+            flex: 1;
+            min-width: 0;
+            padding: 14px 10px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        .option-card-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: white;
+            letter-spacing: -0.4px;
+            line-height: 1.2;
+        }
+
+        .option-card-price {
+            font-size: 15px;
+            font-weight: 500;
+            color: #79BC43;
+            letter-spacing: -0.2px;
+            white-space: nowrap;
+        }
+
+        .option-card-amenity {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 5px;
+            flex-wrap: nowrap;
+        }
+        .option-card-amenity svg { width: 16px; height: 16px; stroke: rgba(255,255,255,0.55); fill: none; stroke-width: 1.8; flex-shrink: 0; }
+        .option-card-amenity span { font-size: 13px; color: rgba(255,255,255,0.65); white-space: nowrap; }
+
+        .option-card-radio {
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.3);
+            flex-shrink: 0;
+            margin: auto 12px;
+        }
+
+        /* Add-on Checkbox Cards */
+        .addon-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 12px;
+            margin-right: 8px;
+        }
+
+        .addon-card {
+            background: #0f2340;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+
+        .addon-card.selected {
+            border-color: #79BC43;
+        }
+
+        .addon-card-image {
+            flex-shrink: 0;
+            padding: 12px 0 12px 12px;
+        }
+
+        .addon-card-image img {
+            width: 108px;
+            height: 68px;
+            object-fit: cover;
+            border-radius: 10px;
+            display: block;
+        }
+
+        .addon-card-content {
+            flex: 1;
+            min-width: 0;
+            padding: 14px 10px 14px 14px;
+        }
+
+        .addon-card-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: white;
+            letter-spacing: -0.4px;
+            line-height: 1.2;
+            margin-bottom: 4px;
+        }
+
+        .addon-card-price {
+            font-size: 15px;
+            font-weight: 500;
+            color: #79BC43;
+            letter-spacing: -0.2px;
+            white-space: nowrap;
+        }
+
+        .addon-checkbox {
+            width: 26px;
+            height: 26px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 7px;
+            margin: auto 12px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .addon-card.selected .addon-checkbox {
+            background: #79BC43;
+            border-color: #79BC43;
+        }
+
+        .addon-checkbox-check {
+            display: none;
+            width: 14px;
+            height: 14px;
+        }
+
+        .addon-card.selected .addon-checkbox-check {
+            display: block;
+        }
+
+        .continue-button {
+            width: 100%;
+            background: #79BC43;
+            border: none;
+            border-radius: 12px;
+            padding: 14px;
+            color: black;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 16px;
+            transition: all 0.2s;
+            letter-spacing: -0.3px;
+        }
+
+        .continue-button:hover {
+            background: #6aa93a;
+        }
+
+        /* Jersey Product Card */
+        .jersey-card {
+            background: #120820;
+            border-radius: 16px;
+            overflow: hidden;
+            margin-top: 12px;
+        }
+
+        .jersey-card-image {
+            background: linear-gradient(135deg, #4a0e6b 0%, #8b2fc9 50%, #5c1a8a 100%);
+            height: 220px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .jersey-card-image img {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+        }
+
+        .jersey-card-content {
+            padding: 14px 16px 16px;
+        }
+
+        .jersey-card-title {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            color: white;
+            line-height: 1.35;
+            margin-bottom: 6px;
+            letter-spacing: -0.3px;
+        }
+
+        .jersey-card-price {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 14px;
+            color: white;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .jersey-card-delivery {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.65);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Group Page Preview Card */
+        .preview-card {
+            background: #0f1e30;
+            border-radius: 16px;
+            overflow: hidden;
+            margin-top: 12px;
+        }
+
+        .preview-card-hero {
+            position: relative;
+            height: 200px;
+            overflow: hidden;
+        }
+
+        .preview-card-hero img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .preview-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(0, 0, 0, 0.65);
+            color: white;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 5px 12px;
+            border-radius: 8px;
+            letter-spacing: -0.2px;
+        }
+
+        .preview-game-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(0deg, rgba(0, 0, 0, 0.75) 0%, transparent 100%);
+            padding: 12px 14px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+        }
+
+        .preview-game-name {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            color: white;
+            line-height: 1.2;
+        }
+
+        .preview-game-date {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-top: 3px;
+        }
+
+        .preview-team-logos {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .preview-team-logo {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: contain;
+            background: rgba(255, 255, 255, 0.12);
+            padding: 4px;
+        }
+
+        .preview-team-logo-placeholder {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #5a2d82;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            font-weight: 700;
+            color: white;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            letter-spacing: 0.3px;
+        }
+
+        .preview-card-body {
+            padding: 14px 16px 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .preview-card-title {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 17px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 4px;
+            letter-spacing: -0.3px;
+        }
+
+        .preview-card-desc {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.65);
+        }
+
+        .preview-event-page-row {
+            padding: 14px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .preview-event-page-title {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            color: white;
+            letter-spacing: -0.3px;
+        }
+
+        .preview-event-page-sub {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.45);
+            margin-top: 2px;
+        }
+
+        .preview-event-page-row svg {
+            width: 20px;
+            height: 20px;
+            stroke: rgba(255, 255, 255, 0.45);
+            fill: none;
+            stroke-width: 2;
+            flex-shrink: 0;
+        }
+
+        /* Payment Cards */
+        .payment-cards {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+            overflow-x: auto;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .payment-cards::-webkit-scrollbar {
+            display: none;
+        }
+
+        .payment-card {
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 14px;
+            padding: 14px;
+            min-width: 190px;
+            cursor: pointer;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .payment-card:hover {
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .payment-card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 5px;
+        }
+
+        .visa-badge {
+            background: #1a1f71;
+            border-radius: 4px;
+            padding: 3px 6px;
+            font-size: 11px;
+            font-weight: 800;
+            font-style: italic;
+            color: white;
+            letter-spacing: 0.5px;
+            flex-shrink: 0;
+        }
+
+        .payment-card-icon {
+            width: 32px;
+            height: 32px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .payment-card-icon svg {
+            width: 18px;
+            height: 18px;
+            stroke: white;
+            stroke-width: 2;
+            fill: none;
+        }
+
+        .payment-card-name {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+            letter-spacing: -0.28px;
+            line-height: 1.2;
+        }
+
+        .payment-card-sub {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 3px;
+            letter-spacing: -0.24px;
+        }
+
+        /* Share Link Card */
+        .share-link-card {
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 14px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .share-link-card:hover {
+            background: rgba(255, 255, 255, 0.11);
+        }
+
+        .share-link-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .share-link-title {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            color: white;
+            letter-spacing: -0.28px;
+            margin-bottom: 3px;
+        }
+
+        .share-link-url {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.45);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .share-link-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .share-link-icon svg {
+            width: 18px;
+            height: 18px;
+            stroke: white;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        /* Time Skip Button */
+        .time-skip {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 24px 0 8px;
+            cursor: pointer;
+        }
+
+        .time-skip-line {
+            flex: 1;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .time-skip-pill {
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 100px;
+            padding: 7px 14px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 12px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.6);
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .time-skip:hover .time-skip-pill {
+            background: rgba(255, 255, 255, 0.12);
+            color: white;
+        }
+
+        /* Horizontal pill buttons */
+        .action-buttons-row {
+            display: flex;
+            flex-direction: row;
+            gap: 8px;
+            margin-top: 12px;
+            overflow-x: auto;
+            padding-bottom: 2px;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .action-buttons-row::-webkit-scrollbar {
+            display: none;
+        }
+
+        .action-button-pill {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 100px;
+            padding: 10px 18px;
+            color: white;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            white-space: nowrap;
+            flex-shrink: 0;
+            transition: all 0.2s;
+        }
+
+        .action-button-pill:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* ===== FAN EXPERIENCE SCREENS ===== */
+        .fan-screen {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: 200;
+            border-radius: 45px;
+            overflow: hidden;
+            display: none;
+        }
+
+        /* Welcome Screen */
+        .welcome-screen {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: #060f1a;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .welcome-bg-area {
+            flex: 1;
+            padding: 70px 20px 0;
+            opacity: 0.25;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .welcome-bg-row {
+            display: flex;
+            gap: 7px;
+            justify-content: center;
+        }
+
+        .welcome-bg-dot {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .welcome-bg-dot.lit { background: rgba(121, 188, 67, 0.4); }
+
+        .welcome-card { background: #0f1e30; border-radius: 20px 20px 0 0; overflow: hidden; }
+
+        .welcome-card-photo { position: relative; height: 200px; overflow: hidden; }
+        .welcome-card-photo img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
+
+        .welcome-close-btn {
+            position: absolute; top: 12px; right: 12px;
+            width: 34px; height: 34px;
+            background: rgba(255,255,255,0.9); border-radius: 50%; border: none;
+            display: flex; align-items: center; justify-content: center; cursor: pointer;
+        }
+        .welcome-close-btn svg { width: 14px; height: 14px; stroke: #000; stroke-width: 2.5; fill: none; }
+
+        .welcome-card-body { background: #132338; padding: 20px 20px 36px; }
+
+        .welcome-heading {
+            font-family: 'Futura Wolves Autocaps', 'Futura', sans-serif;
+            font-size: 30px; color: white; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;
+        }
+        .welcome-sub { font-size: 13px; color: rgba(255,255,255,0.5); margin-bottom: 14px; }
+
+        .welcome-event-box { background: rgba(255,255,255,0.07); border-radius: 12px; padding: 14px; margin-bottom: 16px; }
+        .welcome-event-name { font-size: 15px; font-weight: 700; color: white; letter-spacing: -0.3px; margin-bottom: 3px; }
+        .welcome-event-desc { font-size: 13px; color: rgba(255,255,255,0.5); }
+
+        .welcome-pick-btn {
+            width: 100%; background: white; border: none; border-radius: 12px;
+            padding: 16px; font-size: 15px; font-weight: 700; color: black;
+            cursor: pointer; letter-spacing: -0.3px; transition: all 0.2s;
+        }
+
+        /* Seat Selection Screen */
+        .seats-screen {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: #081627;
+            display: none;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .seats-status-bar {
+            height: 50px; padding: 18px 25px 0;
+            display: flex; justify-content: space-between; align-items: flex-start; flex-shrink: 0;
+        }
+        .seats-time { font-size: 17px; font-weight: 600; color: white; }
+        .seats-indicators { display: flex; gap: 7px; align-items: center; }
+
+        .seats-header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 6px 16px 10px; position: relative; flex-shrink: 0;
+        }
+        .seats-header-center { position: absolute; left: 50%; transform: translateX(-50%); text-align: center; width: 220px; }
+        .seats-header-title {
+            font-family: 'Futura Wolves Autocaps', 'Futura', sans-serif;
+            font-size: 18px; color: white; text-transform: uppercase; letter-spacing: 0.3px; line-height: 1.2; font-weight: normal;
+        }
+        .seats-header-sub { font-size: 12px; color: rgba(255,255,255,0.55); margin-top: 3px; white-space: nowrap; }
+        .seats-glass-btn {
+            width: 44px; height: 44px; border-radius: 50%;
+            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15);
+            display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0;
+        }
+        .seats-glass-btn svg { width: 20px; height: 20px; stroke: white; fill: none; stroke-width: 2; }
+
+        .section-blur-row {
+            margin: 0 16px 8px; display: flex; gap: 8px; flex-shrink: 0;
+        }
+        .section-blur-box { height: 80px; border-radius: 10px; background: rgba(255,255,255,0.06); flex: 1; }
+
+        .suite-map-section {
+            margin: 0 16px 10px;
+            background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px; padding: 12px; flex-shrink: 0;
+        }
+        .suite-map-label { font-size: 12px; color: rgba(255,255,255,0.45); text-align: center; margin-bottom: 10px; letter-spacing: 0.3px; }
+
+        .seat-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 6px; }
+
+        .seat-dot {
+            aspect-ratio: 1; border-radius: 50%;
+            background: rgba(255,255,255,0.12); border: 2px solid rgba(255,255,255,0.35);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 10px; font-weight: 600; color: white; cursor: pointer; overflow: hidden;
+        }
+        .seat-dot.taken { background: transparent; border: none; }
+        .seat-dot.taken .seat-avatar { width: 100%; height: 100%; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: white; }
+        .seat-dot.mine { background: #79BC43; border-color: #79BC43; color: black; }
+
+        .seats-arena-photo { margin: 0 16px 14px; border-radius: 12px; overflow: hidden; height: 160px; flex-shrink: 0; }
+        .seats-arena-photo img { width: 100%; height: 100%; object-fit: cover; }
+
+        .seats-info-section { padding: 0 16px 120px; flex-shrink: 0; }
+
+        .seats-suite-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+        .seats-suite-name { font-size: 20px; font-weight: 700; color: white; letter-spacing: -0.4px; }
+        .seats-suite-price { font-size: 16px; font-weight: 600; color: white; }
+
+        .seats-select-row {
+            background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 10px; padding: 14px 16px;
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; cursor: pointer;
+        }
+        .seats-select-row span { font-size: 15px; color: white; font-weight: 500; }
+        .seats-select-row svg { width: 18px; height: 18px; stroke: rgba(255,255,255,0.4); fill: none; stroke-width: 2; }
+
+        .seats-details-row {
+            background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 10px; padding: 14px 16px; margin-bottom: 16px; cursor: pointer;
+        }
+        .seats-details-label { font-size: 15px; font-weight: 700; color: white; }
+
+        .seats-checkout-wrap {
+            position: sticky; bottom: 0; padding: 12px 0 32px;
+            background: linear-gradient(0deg, #081627 70%, transparent 100%);
+        }
+        .seats-checkout-btn {
+            width: 100%; background: #79BC43; border: none; border-radius: 14px;
+            padding: 16px; font-size: 16px; font-weight: 700; color: black;
+            cursor: pointer; letter-spacing: -0.3px; transition: all 0.2s;
+        }
+        .seats-checkout-btn:hover { background: #6aa93a; }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background-color: #f0f;
+            position: absolute;
+            animation: confetti-fall 2s ease-out forwards;
+            z-index: 10000;
+        }
+
+        @keyframes confetti-fall {
+            to {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-container">
+        <!-- Side Buttons -->
+        <div class="side-button mute-switch"></div>
+        <div class="side-button volume-up"></div>
+        <div class="side-button volume-down"></div>
+        <div class="side-button power-button"></div>
+
+        <!-- Dynamic Island -->
+        <div class="dynamic-island"></div>
+
+        <div class="phone-frame">
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <div class="time">9:41</div>
+            <div class="indicators">
+                <svg class="cellular-icon" width="19" height="12" viewBox="0 0 19 12" fill="white" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="0" y="6" width="4" height="6" rx="1"/>
+                    <rect x="5" y="4" width="4" height="8" rx="1"/>
+                    <rect x="10" y="2" width="4" height="10" rx="1"/>
+                    <rect x="15" y="0" width="4" height="12" rx="1"/>
+                </svg>
+                <svg class="wifi-icon" width="17" height="12" viewBox="0 0 17 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="8.5" cy="11" r="1.5" fill="white"/>
+                    <path d="M5 8C6.1 6.9 7.2 6.5 8.5 6.5C9.8 6.5 10.9 6.9 12 8" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+                    <path d="M2 5C4 3 6 2 8.5 2C11 2 13 3 15 5" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+                <svg class="battery-icon" width="27" height="13" viewBox="0 0 27 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="0.5" y="0.5" width="22" height="12" rx="3.5" stroke="white" stroke-opacity="0.35"/>
+                    <rect x="2" y="2" width="17" height="9" rx="2" fill="white"/>
+                    <path d="M23.5 4.5V8.5C24.8 8 25.5 7.2 25.5 6.5C25.5 5.8 24.8 5 23.5 4.5Z" fill="white" fill-opacity="0.4"/>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Header -->
+        <div class="header">
+            <div class="header-controls">
+                <div class="glass-button" onclick="handleBack()">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M15 18l-6-6 6-6" />
+                    </svg>
+                </div>
+                <div class="glass-button" onclick="handleMenu()">
+                    <svg viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="1" fill="white" />
+                        <circle cx="12" cy="6" r="1" fill="white" />
+                        <circle cx="12" cy="18" r="1" fill="white" />
+                    </svg>
+                </div>
+            </div>
+            <div class="header-title">
+                <h1>CRUNCH AI</h1>
+                <p>Group Sales</p>
+            </div>
+        </div>
+
+        <!-- Chat Area -->
+        <div class="chat-area" id="chatArea">
+            <div class="message" id="loadingMessage" style="display: none;">
+                <div class="avatar loading">
+                    <img src="../images/crunch-avatar.png" alt="Crunch AI">
+                </div>
+                <div class="typing-indicator active">
+                    <span class="basketball">🏀</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Input Area -->
+        <div class="input-area">
+            <div class="add-button" onclick="handleAdd()">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 5v14M5 12h14" />
+                </svg>
+            </div>
+            <div class="input-container" id="inputContainer">
+                <input
+                    type="text"
+                    id="messageInput"
+                    placeholder="Ask Crunch anything..."
+                    onfocus="handleInputFocus()"
+                    onblur="handleInputBlur()"
+                    oninput="handleInputChange()"
+                    onkeypress="handleKeyPress(event)"
+                />
+                <div class="input-actions">
+                    <div class="mic-button" id="micButton" onclick="handleVoice()">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
+                            <path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v4M8 23h8" />
+                        </svg>
+                    </div>
+                    <div class="send-button" id="sendButton" onclick="handleSend()">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M8 13V3M8 3L4 7M8 3L12 7" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fan Experience Screen -->
+        <div id="fanScreen" class="fan-screen" style="display:none;">
+            <!-- Welcome Screen -->
+            <div id="welcomeScreen" class="welcome-screen">
+                <div class="welcome-bg-area">
+                    <div class="welcome-bg-row">
+                        <span class="welcome-bg-dot"></span><span class="welcome-bg-dot"></span><span class="welcome-bg-dot"></span><span class="welcome-bg-dot"></span><span class="welcome-bg-dot"></span><span class="welcome-bg-dot"></span><span class="welcome-bg-dot"></span><span class="welcome-bg-dot"></span>
+                    </div>
+                    <div class="welcome-bg-row">
+                        <span class="welcome-bg-dot"></span><span class="welcome-bg-dot"></span><span class="welcome-bg-dot"></span><span class="welcome-bg-dot"></span><span class="welcome-bg-dot"></span><span class="welcome-bg-dot"></span><span class="welcome-bg-dot"></span><span class="welcome-bg-dot"></span>
+                    </div>
+                    <div class="welcome-bg-row">
+                        <span class="welcome-bg-dot"></span><span class="welcome-bg-dot"></span><span class="welcome-bg-dot"></span><span class="welcome-bg-dot"></span><span class="welcome-bg-dot"></span><span class="welcome-bg-dot"></span><span class="welcome-bg-dot"></span><span class="welcome-bg-dot"></span>
+                    </div>
+                    <div class="welcome-bg-row">
+                        <span class="welcome-bg-dot"></span><span class="welcome-bg-dot"></span><span class="welcome-bg-dot"></span><span class="welcome-bg-dot"></span><span class="welcome-bg-dot"></span><span class="welcome-bg-dot"></span><span class="welcome-bg-dot"></span><span class="welcome-bg-dot"></span>
+                    </div>
+                </div>
+                <div class="welcome-card">
+                    <div class="welcome-card-photo">
+                        <img src="../images/birthday-group-photo.png" alt="Event photo">
+                        <button class="welcome-close-btn" onclick="document.getElementById('fanScreen').style.display='none'">✕</button>
+                    </div>
+                    <div class="welcome-card-body">
+                        <div class="welcome-heading">WELCOME!</div>
+                        <div class="welcome-event-box">
+                            <div style="font-size:15px;font-weight:700;color:white;margin-bottom:4px;">Chris's Birthday Game Night</div>
+                            <div style="font-size:13px;color:rgba(255,255,255,0.65);">Join us for Chris's 40th birthday surprise!</div>
+                        </div>
+                        <button class="welcome-pick-btn" onclick="showSeatSelectionScreen()">Pick Your Seats</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Seat Selection Screen -->
+            <div id="seatsScreen" class="seats-screen" style="display:none;">
+                <div class="seats-status-bar">
+                    <span>9:41</span>
+                    <svg width="55" height="13" viewBox="0 0 55 13" fill="white"><rect x="0" y="5" width="3" height="8" rx="1"/><rect x="5" y="3" width="3" height="10" rx="1"/><rect x="10" y="1" width="3" height="12" rx="1"/><rect x="15" y="0" width="3" height="13" rx="1" fill-opacity="0.3"/><circle cx="28" cy="6.5" r="2" fill="white"/><path d="M23.5 9.5C24.6 8.4 26 7.8 28 7.8C30 7.8 31.4 8.4 32.5 9.5" stroke="white" stroke-width="1.4" stroke-linecap="round" fill="none"/><path d="M20.5 6.5C22.4 4.6 25 3.5 28 3.5C31 3.5 33.6 4.6 35.5 6.5" stroke="white" stroke-width="1.4" stroke-linecap="round" fill="none"/><rect x="40" y="1" width="12" height="11" rx="2" stroke="white" stroke-opacity="0.35"/><rect x="41.5" y="2.5" width="7.5" height="8" rx="1" fill="white"/><path d="M53 4.5v4c1 -.4 1.5-1 1.5-2s-.5-1.6-1.5-2z" fill="white" fill-opacity="0.4"/></svg>
+                </div>
+                <div class="seats-header">
+                    <div class="seats-glass-btn" onclick="document.getElementById('seatsScreen').style.display='none'; document.getElementById('welcomeScreen').style.display='block';">
+                        <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+                    </div>
+                    <div class="seats-header-center">
+                        <div class="seats-header-title">Timberwolves vs. Kings</div>
+                        <div class="seats-header-sub">Sunday, Dec 14 at 6 PM &bull; Target Center</div>
+                    </div>
+                    <div class="seats-glass-btn">
+                        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1" fill="white"/><circle cx="12" cy="6" r="1" fill="white"/><circle cx="12" cy="18" r="1" fill="white"/></svg>
+                    </div>
+                </div>
+                <div class="section-blur-row">
+                    <div class="section-blur-box"></div>
+                    <div class="section-blur-box" style="opacity:0.6;"></div>
+                </div>
+                <div class="suite-map-section">
+                    <div class="suite-map-label">Suite T17</div>
+                    <div class="seat-grid">
+                        <!-- Taken seats (avatars) -->
+                        <div class="seat-dot taken"><div class="seat-avatar" style="background:#9b59b6;">M</div></div>
+                        <div class="seat-dot taken"><div class="seat-avatar" style="background:#e67e22;">J</div></div>
+                        <div class="seat-dot taken"><div class="seat-avatar" style="background:#e74c3c;">S</div></div>
+                        <!-- My seat (green) -->
+                        <div class="seat-dot mine">4</div>
+                        <!-- Open seats 5-16 -->
+                        <div class="seat-dot">5</div>
+                        <div class="seat-dot">6</div>
+                        <div class="seat-dot">7</div>
+                        <div class="seat-dot">8</div>
+                        <div class="seat-dot">9</div>
+                        <div class="seat-dot">10</div>
+                        <div class="seat-dot">11</div>
+                        <div class="seat-dot">12</div>
+                        <div class="seat-dot">13</div>
+                        <div class="seat-dot">14</div>
+                        <div class="seat-dot">15</div>
+                        <div class="seat-dot">16</div>
+                    </div>
+                </div>
+                <div class="section-blur-row">
+                    <div class="section-blur-box" style="opacity:0.6;"></div>
+                    <div class="section-blur-box"></div>
+                </div>
+                <div class="seats-arena-photo">
+                    <img src="../images/vfs.png" alt="Arena view">
+                </div>
+                <div class="seats-info-section">
+                    <div class="seats-suite-row">
+                        <span class="seats-suite-name">Suite T17</span>
+                        <span class="seats-suite-price">$50 <span style="font-size:12px;color:rgba(255,255,255,0.5);font-weight:400;">/ea</span></span>
+                    </div>
+                    <div class="seats-select-row">
+                        <span>Seat 4</span>
+                        <svg viewBox="0 0 24 24"><path d="M8 9l4-4 4 4M8 15l4 4 4-4"/></svg>
+                    </div>
+                    <div class="seats-details-row">
+                        <div class="seats-details-label">Details</div>
+                    </div>
+                </div>
+                <div class="seats-checkout-wrap" style="padding: 12px 16px 32px;">
+                    <button class="seats-checkout-btn">Checkout &bull; $275</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Home Indicator -->
+        <div class="home-indicator"></div>
+
+        <!-- Instructions -->
+        <div class="instructions" id="instructions">
+            Loading group sales demo...
+        </div>
+        </div>
+    </div>
+
+    <script>
+        const chatArea = document.getElementById('chatArea');
+        const messageInput = document.getElementById('messageInput');
+        const inputContainer = document.getElementById('inputContainer');
+        const sendButton = document.getElementById('sendButton');
+        const micButton = document.getElementById('micButton');
+        const loadingMessage = document.getElementById('loadingMessage');
+        const instructions = document.getElementById('instructions');
+        const inputArea = document.querySelector('.input-area');
+
+        let currentStep = 0;
+        let selectedPackage = null;
+        let selectedDate = null;
+        let selectedPayment = null;
+        let awaitingPaymentConfirmation = false;
+        let selectedAddons = [];
+
+        function handleButtonClick(button) {
+            const siblings = button.parentElement.querySelectorAll('.action-button');
+            siblings.forEach(btn => btn.classList.remove('selected'));
+            button.classList.add('selected');
+        }
+
+        function showLoading() {
+            chatArea.appendChild(loadingMessage);
+            loadingMessage.style.display = 'flex';
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }
+
+        function hideLoading() {
+            loadingMessage.style.display = 'none';
+        }
+
+        function triggerConfetti() {
+            const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ffeaa7', '#dfe6e9', '#74b9ff'];
+            const confettiCount = 100;
+            const phoneFrame = document.querySelector('.phone-frame');
+
+            for (let i = 0; i < confettiCount; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.top = '-10px';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.animationDelay = Math.random() * 0.3 + 's';
+                confetti.style.animationDuration = (Math.random() * 1 + 1.5) + 's';
+                phoneFrame.appendChild(confetti);
+
+                setTimeout(() => {
+                    confetti.remove();
+                }, 2500);
+            }
+        }
+
+        function addMessage(text, sender, buttons = null, radioOptions = null) {
+            const message = document.createElement('div');
+            message.className = `message ${sender}`;
+
+            let content = text;
+
+            if (sender === 'ai') {
+                message.innerHTML = `
+                    <div class="message-content">
+                        ${content}
+                        ${buttons ? `<div class="action-buttons">${buttons.map(btn =>
+                            `<button class="action-button" onclick='handleButtonClick(this); ${btn.action.replace(/"/g, '&quot;')}'>${btn.icon || ''}${btn.label}</button>`
+                        ).join('')}</div>` : ''}
+                        ${radioOptions ? `<div class="radio-options">${radioOptions.map((opt, idx) =>
+                            `<div class="radio-option" onclick="selectRadio(this, '${opt.value}', '${opt.group}')" data-group="${opt.group}">
+                                <div class="radio-circle"></div>
+                                <span>${opt.label}</span>
+                            </div>`
+                        ).join('')}</div>` : ''}
+                    </div>
+                `;
+            } else {
+                message.innerHTML = `
+                    <div class="message-content">${content}</div>
+                    <div class="avatar">👤</div>
+                `;
+            }
+
+            chatArea.appendChild(message);
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }
+
+        function addUserMessage(text) {
+            addMessage(text, 'user');
+        }
+
+
+        function handleInputFocus() {
+            inputContainer.classList.add('focused');
+            instructions.style.display = 'none';
+        }
+
+        function handleInputBlur() {
+            if (!messageInput.value) {
+                inputContainer.classList.remove('focused');
+            }
+        }
+
+        function handleInputChange() {
+            // Input changes handled here
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter' && messageInput.value.trim()) {
+                handleSend();
+            }
+        }
+
+        function handleSend() {
+            const message = messageInput.value.trim();
+            if (!message) return;
+
+            if (currentStep === 1) {
+                step1_SendDateAndBudget();
+            } else if (currentStep === 4) {
+                jerseyDetailsStep();
+            } else if (currentStep === 5) {
+                groupPageStep();
+            } else {
+                addUserMessage(message);
+                messageInput.value = '';
+                showLoading();
+                setTimeout(() => {
+                    hideLoading();
+                    addMessage('Sure! You can create a group chat with everyone and share the payment link there. Much easier than entering 15 emails individually!', 'ai');
+                    setTimeout(() => {
+                        triggerConfetti();
+                        addMessage('🎉 Booking confirmed! I\'ll send the payment link to your phone. Share it in the group chat and tickets will be sent once everyone pays!', 'ai');
+                    }, 1500);
+                }, 1500);
+            }
+        }
+
+        function handleVoice() {
+            const voiceInstruction = document.createElement('div');
+            voiceInstruction.className = 'instructions';
+            voiceInstruction.textContent = '🎤 Voice input';
+            voiceInstruction.style.bottom = '120px';
+            document.querySelector('.phone-frame').appendChild(voiceInstruction);
+
+            setTimeout(() => {
+                voiceInstruction.remove();
+            }, 2000);
+        }
+
+        function handleAdd() {
+            const addInstruction = document.createElement('div');
+            addInstruction.className = 'instructions';
+            addInstruction.textContent = 'Add attachments';
+            addInstruction.style.bottom = '120px';
+            document.querySelector('.phone-frame').appendChild(addInstruction);
+
+            setTimeout(() => {
+                addInstruction.remove();
+            }, 2000);
+        }
+
+        function handleBack() {
+            const backInstruction = document.createElement('div');
+            backInstruction.className = 'instructions';
+            backInstruction.textContent = 'Back to previous screen';
+            backInstruction.style.bottom = '120px';
+            document.querySelector('.phone-frame').appendChild(backInstruction);
+
+            setTimeout(() => {
+                backInstruction.remove();
+            }, 2000);
+        }
+
+        function handleMenu() {
+            const menuInstruction = document.createElement('div');
+            menuInstruction.className = 'instructions';
+            menuInstruction.textContent = 'More options menu';
+            menuInstruction.style.bottom = '120px';
+            document.querySelector('.phone-frame').appendChild(menuInstruction);
+
+            setTimeout(() => {
+                menuInstruction.remove();
+            }, 2000);
+        }
+
+        // Start the demo
+        function startDemo() {
+            instructions.style.display = 'none';
+            currentStep = 1;
+
+            // Step 1: User's initial message appears immediately
+            addUserMessage('Trying to bring about 15 people to a game for a friend\'s birthday. Everyone pays for their own ticket.');
+
+            showLoading();
+            setTimeout(() => {
+                hideLoading();
+                addMessage('Nice. What date? And what\'s your ideal price per person?', 'ai');
+                // Pre-fill next response
+                messageInput.value = 'Looking at the Kings game on Dec 14th. Hoping to stay around $200 per person.';
+                messageInput.focus();
+            }, 1500);
+        }
+
+        function step1_SendDateAndBudget() {
+            const message = messageInput.value.trim();
+            if (!message) return;
+
+            addUserMessage(message);
+            messageInput.value = '';
+            currentStep = 2;
+
+            showLoading();
+            setTimeout(() => {
+                hideLoading();
+                const optionsHTML = `
+                    Got it. Here are a couple of good fits, which one do you want?
+                    <div class="option-cards">
+                        <div class="option-card" onclick="selectOptionCard(this, selectSection112)">
+                            <div class="option-card-img-wrap">
+                                <img src="../images/section-110.png" alt="Section 112">
+                                <div class="option-card-expand">
+                                    <svg viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+                                </div>
+                            </div>
+                            <div class="option-card-body">
+                                <div class="option-card-title">Section 112</div>
+                                <div class="option-card-price">$200 per person</div>
+                            </div>
+                            <div class="option-card-radio"></div>
+                        </div>
+                        <div class="option-card" onclick="selectOptionCard(this, selectSharedSuite)">
+                            <div class="option-card-img-wrap">
+                                <img src="../images/Leading/shared%20suite%20-%20t17.png" alt="Suite T17">
+                                <div class="option-card-expand">
+                                    <svg viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+                                </div>
+                            </div>
+                            <div class="option-card-body">
+                                <div class="option-card-title">Shared Suite - T17</div>
+                                <div class="option-card-price">$275 per person</div>
+                                <div class="option-card-amenity">
+                                    <svg viewBox="0 0 24 24"><path d="M3 2v7c0 1.1.9 2 2 2h1v11M7 2v20M17 2v6a3 3 0 0 1-3 3v11" stroke-linecap="round"/></svg>
+                                    <span>Incl. food and beverage</span>
+                                </div>
+                            </div>
+                            <div class="option-card-radio"></div>
+                        </div>
+                    </div>
+                `;
+                addMessage(optionsHTML, 'ai');
+                setTimeout(() => {
+                    addMessage('The suite requires a <strong>$100 deposit</strong> to hold it for 48 hours while your group opts in. You would only be responsible for the minimum if the group doesn\'t reach it.', 'ai');
+                }, 1000);
+            }, 1500);
+        }
+
+        function selectOptionCard(el, fn) {
+            document.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
+            el.classList.add('selected');
+            setTimeout(fn, 400);
+        }
+
+        function selectSection112() {
+            addUserMessage('Section 112');
+            currentStep = 3;
+
+            showLoading();
+            setTimeout(() => {
+                hideLoading();
+                addMessage('Perfect! Section 112 is a great baseline view. That\'s $200 × 15 people = $3,000 total.', 'ai');
+                setTimeout(() => {
+                    addMessage('How do you want to handle payment? I can send individual payment links to each person or you can pay upfront and collect from the group.', 'ai', [
+                        { label: 'Send individual payment links', action: 'selectIndividualPayment()', icon: '<svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>' },
+                        { label: 'I\'ll pay upfront', action: 'selectUpfrontPayment()', icon: '<svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>' }
+                    ]);
+                }, 1500);
+            }, 1500);
+        }
+
+        function selectSharedSuite() {
+            addUserMessage('Shared Suite - T17');
+            currentStep = 3;
+            selectedAddons = [];
+
+            showLoading();
+            setTimeout(() => {
+                hideLoading();
+                addMessage('Great pick. Suites fill fast for birthdays.', 'ai');
+                setTimeout(() => {
+                    const addOnsHTML = `
+                        Before I build your page, do you want to add any optional experiences your group members can select?
+                        <div class="addon-cards">
+                            <div class="addon-card" onclick="toggleAddon(this, 'shootaround')">
+                                <div class="addon-card-image">
+                                    <img src="../images/Leading/pre-game%20shoot%20around.png" alt="Pre-game shootaround">
+                                </div>
+                                <div class="addon-card-content">
+                                    <div class="addon-card-title">Pre-game shootaround</div>
+                                    <div class="addon-card-price">$50 per person</div>
+                                </div>
+                                <div class="addon-checkbox">
+                                    <svg class="addon-checkbox-check" viewBox="0 0 14 14" fill="none">
+                                        <path d="M2 7l4 4 6-6" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="addon-card" onclick="toggleAddon(this, 'tunnel')">
+                                <div class="addon-card-image">
+                                    <img src="../images/Leading/tunnel%20access%20during%20player%20intros.png" alt="Tunnel access">
+                                </div>
+                                <div class="addon-card-content">
+                                    <div class="addon-card-title">Tunnel access during player intros</div>
+                                    <div class="addon-card-price">$75 per person</div>
+                                </div>
+                                <div class="addon-checkbox">
+                                    <svg class="addon-checkbox-check" viewBox="0 0 14 14" fill="none">
+                                        <path d="M2 7l4 4 6-6" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="addon-card" onclick="selectFreethrow(this)">
+                                <div class="addon-card-image">
+                                    <img src="../images/Leading/post-game%20free%20throw%20experience.png" alt="Post-game free throw">
+                                </div>
+                                <div class="addon-card-content">
+                                    <div class="addon-card-title">Post-game free throw experience</div>
+                                    <div class="addon-card-price">$50 per person</div>
+                                </div>
+                                <div class="addon-checkbox">
+                                    <svg class="addon-checkbox-check" viewBox="0 0 14 14" fill="none">
+                                        <path d="M2 7l4 4 6-6" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    addMessage(addOnsHTML, 'ai');
+                }, 1000);
+            }, 1500);
+        }
+
+        function selectFreethrow(card) {
+            card.classList.add('selected');
+            addUserMessage('Post-game free throw experience');
+            showJerseyUpsell();
+        }
+
+        function toggleAddon(card, addonId) {
+            card.classList.toggle('selected');
+            if (selectedAddons.includes(addonId)) {
+                selectedAddons = selectedAddons.filter(a => a !== addonId);
+            } else {
+                selectedAddons.push(addonId);
+            }
+        }
+
+        function continueFromAddons() {
+            const addonLabels = {
+                'shootaround': 'Pre-game shootaround',
+                'tunnel': 'Tunnel access during player intros',
+                'freethrow': 'Post-game free throw experience'
+            };
+            const addonText = selectedAddons.length > 0
+                ? selectedAddons.map(a => addonLabels[a]).join(', ')
+                : 'Suite only, no add-ons';
+            addUserMessage(addonText);
+
+            if (selectedAddons.includes('freethrow')) {
+                showJerseyUpsell();
+            } else {
+                buildGroupPage();
+            }
+        }
+
+        function showJerseyUpsell() {
+            showLoading();
+            setTimeout(() => {
+                hideLoading();
+                addMessage('Added. It\'ll show as $50 per person.', 'ai');
+                setTimeout(() => {
+                    const jerseyHTML = `
+                        Also... want a birthday gift? City Edition jersey (Purple Rain) with the celebrated person's name on the back.<br><br>You can pay or let the group split it.
+                        <div class="jersey-card">
+                            <div class="jersey-card-image">
+                                <img src="../images/Custom%20Minnesota%20Timberwolves%20Nike%20Unisex.png" alt="Custom Timberwolves Jersey">
+                            </div>
+                            <div class="jersey-card-content">
+                                <div class="jersey-card-title">Custom Minnesota Timberwolves Nike Unisex 2025/26 Swingman Jersey - P...</div>
+                                <div class="jersey-card-price">$119.99</div>
+                                <div class="jersey-card-delivery"><span>⚡</span> Will be delivered to suite on gameday</div>
+                            </div>
+                        </div>
+                        <div class="action-buttons-row">
+                            <button class="action-button-pill" onclick="jerseyDecision('pay')">I'll pay for it.</button>
+                            <button class="action-button-pill" onclick="jerseyDecision('split')">We'll split it.</button>
+                            <button class="action-button-pill" onclick="jerseyDecision('no')">No thanks.</button>
+                        </div>
+                    `;
+                    addMessage(jerseyHTML, 'ai');
+                }, 1000);
+            }, 1500);
+        }
+
+        function jerseyDecision(choice) {
+            const messages = {
+                'pay': "I'll pay for it.",
+                'split': "We'll split it.",
+                'no': "No thanks."
+            };
+            addUserMessage(messages[choice]);
+
+            if (choice === 'pay') {
+                showLoading();
+                setTimeout(() => {
+                    hideLoading();
+                    addMessage("Love it. I'll add that to your organizer checkout.", 'ai');
+                    setTimeout(() => {
+                        addMessage("Can you give me their size, jersey number, and what you would like printed on the back?", 'ai');
+                        messageInput.value = 'Size Large, #1, Williams';
+                        currentStep = 4;
+                    }, 1000);
+                }, 1500);
+            } else {
+                buildGroupPage();
+            }
+        }
+
+        function jerseyDetailsStep() {
+            const message = messageInput.value.trim();
+            if (!message) return;
+            addUserMessage(message);
+            messageInput.value = '';
+            currentStep = 5;
+
+            showLoading();
+            setTimeout(() => {
+                hideLoading();
+                addMessage("Cool. Last thing. I need a photo, event name, and a short description for your group page.", 'ai');
+                messageInput.value = "Chris's Birthday Game Night";
+            }, 1500);
+        }
+
+        function groupPageStep() {
+            messageInput.value = '';
+            currentStep = 0;
+
+            // Simulate photo being sent first
+            const photoMsg = document.createElement('div');
+            photoMsg.className = 'message user';
+            photoMsg.innerHTML = `
+                <div class="message-content" style="padding: 4px; max-width: 220px;">
+                    <img src="../images/birthday-group-photo.png" style="width: 100%; border-radius: 12px; display: block;">
+                </div>
+            `;
+            chatArea.appendChild(photoMsg);
+            chatArea.scrollTop = chatArea.scrollHeight;
+
+            setTimeout(() => {
+                addUserMessage("Chris's Birthday Game Night");
+                setTimeout(() => {
+                    addUserMessage("Join us for Chris's 40th birthday surprise!");
+                    showLoading();
+                    setTimeout(() => {
+                        hideLoading();
+                        const previewHTML = `
+                            Here's your preview. Look okay?
+                            <div class="preview-card">
+                                <div class="preview-card-hero">
+                                    <img src="../images/birthday-group-photo.png" alt="Event photo">
+                                    <div class="preview-badge">Preview</div>
+                                    <div class="preview-game-overlay">
+                                        <div>
+                                            <div class="preview-game-name">Timberwolves vs. Kings</div>
+                                            <div class="preview-game-date">Sun, Dec 14 • 6:00PM</div>
+                                        </div>
+                                        <div class="preview-team-logos">
+                                            <img src="../images/wolves-vs-sac.png" alt="Timberwolves vs Kings" style="height: 36px; width: auto; object-fit: contain;">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="preview-card-body">
+                                    <div class="preview-card-title">Chris's Birthday Game Night</div>
+                                    <div class="preview-card-desc">Join us for Chris's 40th birthday surprise!</div>
+                                </div>
+                                <div class="preview-event-page-row">
+                                    <div>
+                                        <div class="preview-event-page-title">Preview Event Page</div>
+                                        <div class="preview-event-page-sub">See what your guests will experience</div>
+                                    </div>
+                                    <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                                </div>
+                            </div>
+                            <div class="action-buttons-row">
+                                <button class="action-button-pill" onclick="previewDecision('good')">Looks good.</button>
+                                <button class="action-button-pill" onclick="previewDecision('change')">I want to change something.</button>
+                            </div>
+                        `;
+                        addMessage(previewHTML, 'ai');
+                    }, 1500);
+                }, 700);
+            }, 700);
+        }
+
+        function previewDecision(choice) {
+            if (choice === 'good') {
+                addUserMessage('Looks good.');
+                showDepositPayment();
+            } else {
+                addUserMessage('I want to change something.');
+                showLoading();
+                setTimeout(() => {
+                    hideLoading();
+                    addMessage("No problem! What would you like to change?", 'ai');
+                }, 1500);
+            }
+        }
+
+        function showDepositPayment() {
+            showLoading();
+            setTimeout(() => {
+                hideLoading();
+                const paymentHTML = `
+                    Awesome. Once you pay the $100 deposit, I'll unlock your share link. Want to use this card we have on file?
+                    <div class="payment-cards">
+                        <div class="payment-card" onclick="payDeposit('visa')">
+                            <div class="payment-card-header">
+                                <div class="visa-badge">VISA</div>
+                                <div class="payment-card-name">Pay with •••• 0237</div>
+                            </div>
+                            <div class="payment-card-sub">$100 will be charged to this card</div>
+                        </div>
+                        <div class="payment-card" onclick="payDeposit('other')">
+                            <div class="payment-card-header">
+                                <div class="payment-card-icon">
+                                    <svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+                                </div>
+                                <div class="payment-card-name">Pay another way</div>
+                            </div>
+                            <div class="payment-card-sub">Apple Pay or new card</div>
+                        </div>
+                    </div>
+                `;
+                addMessage(paymentHTML, 'ai');
+            }, 1500);
+        }
+
+        function payDeposit(method) {
+            addUserMessage(method === 'visa' ? 'Pay $100 with Visa •••• 0237' : 'Pay another way');
+            buildGroupPage();
+        }
+
+        function buildGroupPage() {
+            showLoading();
+            setTimeout(() => {
+                hideLoading();
+                const linkHTML = `
+                    All set. Here's your link for friends to join:
+                    <div class="share-link-card">
+                        <div class="share-link-info">
+                            <div class="share-link-title">Chris's Birthday Game Night</div>
+                            <div class="share-link-url">https://www.timberwolves.com/38463465</div>
+                        </div>
+                        <div class="share-link-icon">
+                            <svg viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+                        </div>
+                    </div>
+                `;
+                addMessage(linkHTML, 'ai');
+                setTimeout(() => {
+                    addMessage("Friends can pick seats and pay individually.", 'ai');
+                    setTimeout(() => {
+                        addMessage("If you want to chat with a live concierge before finishing anything big, just tap the button at checkout.", 'ai');
+                        setTimeout(() => {
+                            const skipEl = document.createElement('div');
+                            skipEl.className = 'time-skip';
+                            skipEl.onclick = skipToFollowUp;
+                            skipEl.innerHTML = `
+                                <div class="time-skip-line"></div>
+                                <div class="time-skip-pill">⏩ 2 days later — tap to continue</div>
+                                <div class="time-skip-line"></div>
+                            `;
+                            chatArea.appendChild(skipEl);
+                            chatArea.scrollTop = chatArea.scrollHeight;
+                        }, 1000);
+                    }, 1000);
+                }, 1000);
+            }, 1500);
+        }
+
+        function skipToFollowUp() {
+            // Clear chat and reset
+            chatArea.innerHTML = '';
+            currentStep = 0;
+
+            // Update header subtitle
+            document.querySelector('.header-title p').textContent = "Chris's Birthday Game Night";
+
+            // Re-add loading message
+            const loadingMsg = document.createElement('div');
+            loadingMsg.id = 'loadingMessage';
+            loadingMsg.className = 'message';
+            loadingMsg.style.display = 'none';
+            loadingMsg.innerHTML = `
+                <div class="avatar loading">
+                    <img src="../images/crunch-avatar.png" alt="Crunch AI">
+                </div>
+                <div class="typing-indicator active">
+                    <span class="basketball">🏀</span>
+                </div>
+            `;
+            chatArea.appendChild(loadingMsg);
+
+            showLoading();
+            setTimeout(() => {
+                hideLoading();
+                const statusHTML = `
+                    Here's where things stand:<br><br>
+                    <ul style="padding-left: 18px; line-height: 1.9;">
+                        <li><strong>12 friends</strong> have already opted in</li>
+                        <li><strong>5 added</strong> the post-game free throw</li>
+                        <li>All confirmed seats are shown below with profile photos</li>
+                    </ul>
+                    <br>You've got 24 hours left on the suite hold. Want me to remind the group?
+                    <div class="action-buttons-row" style="margin-top: 14px;">
+                        <button class="action-button-pill" onclick="followUpDecision('remind')">Yes, please remind them.</button>
+                        <button class="action-button-pill" onclick="followUpDecision('no')">No, thanks.</button>
+                        <button class="action-button-pill" onclick="followUpDecision('handle')">I'll handle it.</button>
+                    </div>
+                `;
+                addMessage(statusHTML, 'ai');
+            }, 1500);
+        }
+
+        function followUpDecision(choice) {
+            const messages = {
+                'remind': 'Yes, please remind them.',
+                'no': 'No, thanks.',
+                'handle': "I'll handle it."
+            };
+            addUserMessage(messages[choice]);
+            showLoading();
+            setTimeout(() => {
+                hideLoading();
+                if (choice === 'remind') {
+                    addMessage("Done! I've sent a reminder to everyone who hasn't confirmed yet. I'll let you know when the last few opt in.", 'ai');
+                    setTimeout(() => {
+                        const skipEl = document.createElement('div');
+                        skipEl.className = 'time-skip';
+                        skipEl.onclick = skipToFanExperience;
+                        skipEl.innerHTML = `
+                            <div class="time-skip-line"></div>
+                            <div class="time-skip-pill">👥 See the guest experience →</div>
+                            <div class="time-skip-line"></div>
+                        `;
+                        chatArea.appendChild(skipEl);
+                        chatArea.scrollTop = chatArea.scrollHeight;
+                    }, 800);
+                } else if (choice === 'no') {
+                    addMessage("Got it. I'll keep monitoring and flag anything urgent. Enjoy the game!", 'ai');
+                } else {
+                    addMessage("No problem — reach out anytime if you need help managing the group.", 'ai');
+                }
+            }, 1500);
+        }
+
+        function selectIndividualPayment() {
+            addUserMessage('Send individual payment links');
+
+            showLoading();
+            setTimeout(() => {
+                hideLoading();
+                addMessage('Great! I\'ll need the names and phone numbers or emails for all 15 people. You can send them in a list or one at a time.', 'ai');
+                messageInput.value = 'Can I just share a group chat link?';
+            }, 1500);
+        }
+
+        function selectUpfrontPayment() {
+            addUserMessage('I\'ll pay upfront');
+
+            showLoading();
+            setTimeout(() => {
+                hideLoading();
+                addMessage('Perfect! Your order is reserved. Total is $3,000 for 15 tickets in Section 112.', 'ai');
+                setTimeout(() => {
+                    addMessage('How would you like to pay?', 'ai', [
+                        { label: 'Credit Card', action: 'payWithCard()', icon: '<svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>' },
+                        { label: 'Venmo / Cash App', action: 'payWithVenmo()', icon: '<svg viewBox="0 0 24 24"><path d="M12 2v20M2 12h20"/></svg>' }
+                    ]);
+                }, 1500);
+            }, 1500);
+        }
+
+        function payWithCard() {
+            addUserMessage('Credit Card');
+
+            showLoading();
+            setTimeout(() => {
+                hideLoading();
+                addMessage('I\'ll send you a secure payment link. Once payment is confirmed, I\'ll email the tickets and you can distribute them to the group.', 'ai');
+                setTimeout(() => {
+                    triggerConfetti();
+                    addMessage('🎉 Payment link sent to your email! Tickets will be delivered within 24 hours of payment.', 'ai');
+                }, 1500);
+            }, 1500);
+        }
+
+        function payWithVenmo() {
+            addUserMessage('Venmo / Cash App');
+
+            showLoading();
+            setTimeout(() => {
+                hideLoading();
+                addMessage('You can send payment to @TimberwolvesGroupSales. Include "Kings 12/14 - 15 tickets" in the note.', 'ai');
+                setTimeout(() => {
+                    addMessage('Once I see the payment, I\'ll email the tickets within 1 hour and you can share them with the group!', 'ai');
+                }, 1500);
+            }, 1500);
+        }
+
+        function skipToFanExperience() {
+            const fanScreen = document.getElementById('fanScreen');
+            const welcomeScreen = document.getElementById('welcomeScreen');
+            const seatsScreen = document.getElementById('seatsScreen');
+            welcomeScreen.style.display = 'flex';
+            seatsScreen.style.display = 'none';
+            fanScreen.style.display = 'block';
+        }
+
+        function showSeatSelectionScreen() {
+            document.getElementById('welcomeScreen').style.display = 'none';
+            document.getElementById('seatsScreen').style.display = 'flex';
+        }
+
+        // Auto-start demo after 2 seconds
+        setTimeout(startDemo, 2000);
+    </script>
+</body>
+</html>

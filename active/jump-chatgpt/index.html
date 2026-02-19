@@ -1,0 +1,2123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jump - ChatGPT Prototype</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "ui-sans-serif", "-apple-system", "system-ui", "Segoe UI", "Helvetica", "Apple Color Emoji", "Arial", "sans-serif", "Segoe UI Emoji", "Segoe UI Symbol";
+            height: 100vh;
+            overflow: hidden;
+            background: #fff;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 260px;
+            background: #f9f9f9;
+            border-right: 1px solid #e5e5e5;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            padding: 16px 12px 12px 24px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-content {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 0 12px 16px 12px;
+        }
+
+        .icon-btn {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            border-radius: 6px;
+            color: #565656;
+        }
+
+        .icon-btn:hover {
+            background: #ececec;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #2d2d2d;
+            margin-bottom: 4px;
+            transition: background 0.2s;
+        }
+
+        .menu-item:hover {
+            background: #ececec;
+        }
+
+        .menu-item svg {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-section {
+            margin-top: 24px;
+            margin-bottom: 8px;
+        }
+
+        .section-title {
+            font-size: 11px;
+            font-weight: 500;
+            color: #8e8e8e;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+            padding-left: 12px;
+        }
+
+        .gpt-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #2d2d2d;
+            margin-bottom: 2px;
+        }
+
+        .gpt-item:hover {
+            background: #ececec;
+        }
+
+        .gpt-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            background: linear-gradient(135deg, #10a37f 0%, #059669 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 10px;
+        }
+
+        .project-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #2d2d2d;
+            margin-bottom: 2px;
+        }
+
+        .project-item:hover {
+            background: #ececec;
+        }
+
+        .project-item.active {
+            background: #ececec;
+            font-weight: 500;
+        }
+
+        .chat-item {
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #2d2d2d;
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .chat-item:hover {
+            background: #ececec;
+        }
+
+        .chat-item.active {
+            background: #ececec;
+            font-weight: 500;
+        }
+
+        .user-profile {
+            padding: 16px 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+            border-top: 1px solid #e5e5e5;
+            margin: 0 12px 12px 12px;
+        }
+
+        .user-profile:hover {
+            background: #ececec;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #d0d0d0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 500;
+            font-size: 13px;
+        }
+
+        .user-info {
+            flex: 1;
+        }
+
+        .user-name {
+            font-size: 14px;
+            color: #2d2d2d;
+            font-weight: 500;
+        }
+
+        .user-badge {
+            font-size: 11px;
+            color: #8e8e8e;
+        }
+
+        /* Main Chat Area */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+        }
+
+        .top-bar {
+            height: 60px;
+            border-bottom: 1px solid #e5e5e5;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+        }
+
+        .model-selector {
+            font-size: 16px;
+            font-weight: 500;
+            color: #2d2d2d;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .chatgpt-logo {
+            fill: #2d2d2d;
+        }
+
+        .top-bar-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .chat-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 60px 180px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .empty-state {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+            margin-top: -100px;
+        }
+
+        .empty-state h1 {
+            font-size: 36px;
+            color: #2d2d2d;
+            font-weight: 400;
+            margin-bottom: 0;
+        }
+
+        .empty-state .input-wrapper {
+            width: 100%;
+            max-width: 700px;
+            padding: 0;
+        }
+
+        .empty-state .input-container {
+            position: relative;
+        }
+
+        .message {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 12px;
+            opacity: 0;
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        .message-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #d0d0d0;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 500;
+            font-size: 13px;
+        }
+
+        .message-avatar.assistant {
+            background: #10a37f;
+            display: none;
+        }
+
+        .user-message .message-avatar {
+            display: none;
+        }
+
+        .message-content {
+            flex: 1;
+            padding-top: 4px;
+        }
+
+        .message-text {
+            font-size: 15px;
+            line-height: 1.6;
+            color: #2d2d2d;
+            margin-bottom: 16px;
+            background: #f4f4f4;
+            padding: 12px 16px;
+            border-radius: 18px;
+            display: inline-block;
+            max-width: 100%;
+        }
+
+        .message.user-message {
+            justify-content: flex-end;
+        }
+
+        .message.user-message .message-content {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .message.user-message .message-text {
+            background: #f4f4f4;
+            max-width: fit-content;
+            margin-left: auto;
+        }
+
+        .message.assistant-message .message-text {
+            background: transparent;
+            padding: 0;
+        }
+
+        .message-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+            opacity: 0;
+            animation: fadeIn 0.3s ease forwards 0.2s;
+        }
+
+        .action-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6e6e6e;
+            transition: background 0.2s;
+        }
+
+        .action-btn:hover {
+            background: #f0f0f0;
+        }
+
+        .action-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Jump Content Modules */
+        .jump-module {
+            background: #ffffff;
+            border: 1px solid #e5e5e5;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 12px;
+            opacity: 0;
+            animation: fadeInModule 0.6s ease forwards;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        @keyframes fadeInModule {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Events List - StubHub Style */
+        .app-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .app-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .app-logo {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .app-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .app-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: #2d2d2d;
+        }
+
+        .app-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .events-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #2d2d2d;
+            padding: 20px 20px 16px;
+        }
+
+        .events-list {
+            padding: 0 20px;
+        }
+
+        .event-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 0;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .event-item:hover {
+            background: #fafafa;
+            margin: 0 -20px;
+            padding: 16px 20px;
+        }
+
+        .event-image {
+            width: 120px;
+            height: 64px;
+            border-radius: 8px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .event-matchup {
+            width: 100%;
+            height: 100%;
+            display: flex;
+        }
+
+        .event-team {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .event-team img {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+        }
+
+        .event-team.home {
+            background: #0C2340;
+        }
+
+        .event-team.blazers {
+            background: #E03A3E;
+        }
+
+        .event-team.wizards {
+            background: #002B5C;
+        }
+
+        .event-team.spurs {
+            background: #C4CED4;
+        }
+
+        .event-team.pistons {
+            background: #C8102E;
+        }
+
+        .event-details {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .event-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: #2d2d2d;
+            margin-bottom: 4px;
+        }
+
+        .event-venue {
+            font-size: 14px;
+            color: #6e6e6e;
+            margin-bottom: 2px;
+        }
+
+        .event-datetime {
+            font-size: 14px;
+            color: #6e6e6e;
+        }
+
+        .event-price {
+            font-size: 16px;
+            font-weight: 500;
+            color: #2d2d2d;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 2px;
+        }
+
+        .event-price-sub {
+            font-size: 11px;
+            font-weight: 400;
+            color: #8e8e8e;
+        }
+
+        .event-offer-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: #10a37f;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-top: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .event-offer-badge svg {
+            width: 12px;
+            height: 12px;
+            fill: white;
+        }
+
+        .events-footer {
+            padding: 16px 20px 20px;
+        }
+
+        .view-more-btn {
+            width: 100%;
+            padding: 12px;
+            background: #f5f5f5;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #2d2d2d;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .view-more-btn:hover {
+            background: #ebebeb;
+        }
+
+        .events-disclaimer {
+            font-size: 12px;
+            color: #8e8e8e;
+            text-align: center;
+            padding: 12px 20px 4px;
+        }
+
+        .event-header-module {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 12px 16px 16px 12px;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .event-header-image {
+            width: 80px;
+            height: 48px;
+            border-radius: 6px;
+            display: flex;
+            overflow: hidden;
+        }
+
+        .event-header-team {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .event-header-team img {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+        }
+
+        .event-header-info {
+            flex: 1;
+        }
+
+        .event-header-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2d2d2d;
+            margin-bottom: 4px;
+        }
+
+        .event-header-meta {
+            font-size: 13px;
+            color: #6e6e6e;
+            line-height: 1.4;
+        }
+
+        .seating-module {
+            padding: 0;
+            position: relative;
+        }
+
+        .seating-cards {
+            display: flex;
+            gap: 16px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            scroll-behavior: smooth;
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE/Edge */
+            padding: 20px;
+            padding-bottom: 8px;
+        }
+
+        .seating-cards::-webkit-scrollbar {
+            display: none; /* Chrome/Safari/Opera */
+        }
+
+        .section-card {
+            background: #ffffff;
+            border: 1px solid #e5e5e5;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.2s;
+            flex: 0 0 320px;
+            min-width: 320px;
+        }
+
+        .section-card:hover {
+            border-color: #10a37f;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-card-image {
+            width: 100%;
+            height: 160px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .section-view-label {
+            position: relative;
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            z-index: 2;
+        }
+
+        .section-card-content {
+            padding: 16px;
+        }
+
+        .section-card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .section-card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2d2d2d;
+            margin-bottom: 4px;
+        }
+
+        .section-card-subtitle {
+            font-size: 14px;
+            color: #6e6e6e;
+            font-weight: 400;
+        }
+
+        .section-card-price-top {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2d2d2d;
+            flex-shrink: 0;
+        }
+
+        .section-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: #10a37f;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            flex-shrink: 0;
+        }
+
+        .section-badge svg {
+            width: 10px;
+            height: 10px;
+            fill: white;
+        }
+
+        .section-card-location {
+            font-size: 13px;
+            color: #6e6e6e;
+            margin-bottom: 12px;
+        }
+
+        .section-card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 12px;
+            border-top: 1px solid #e5e5e5;
+        }
+
+        .section-card-price {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .section-price-main {
+            font-size: 18px;
+            font-weight: 700;
+            color: #2d2d2d;
+        }
+
+        .section-price-sub {
+            font-size: 11px;
+            color: #8e8e8e;
+            margin-top: 2px;
+        }
+
+        .section-select-btn {
+            padding: 8px 16px;
+            background: #266092;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .section-select-btn:hover {
+            background: #1e4d75;
+        }
+
+        .experience-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 16px;
+        }
+
+        .experience-card {
+            background: #ffffff;
+            border: 2px solid #e5e5e5;
+            border-radius: 10px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .experience-card.premium {
+            border-color: #fbbf24;
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+        }
+
+        .experience-card:hover {
+            border-color: #10a37f;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .experience-badge {
+            display: inline-block;
+            background: #fbbf24;
+            color: #78350f;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .experience-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #2d2d2d;
+            margin-bottom: 8px;
+        }
+
+        .experience-description {
+            font-size: 14px;
+            color: #6e6e6e;
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+
+        .experience-features {
+            list-style: none;
+            margin-bottom: 16px;
+        }
+
+        .experience-features li {
+            font-size: 13px;
+            color: #2d2d2d;
+            padding: 6px 0;
+            padding-left: 24px;
+            position: relative;
+        }
+
+        .experience-features li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #10a37f;
+            font-weight: bold;
+        }
+
+        .experience-price {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2d2d2d;
+            margin-bottom: 4px;
+        }
+
+        .experience-price-note {
+            font-size: 12px;
+            color: #8e8e8e;
+        }
+
+        .confirmation-module {
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            border: 2px solid #10a37f;
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .confirmation-icon {
+            width: 64px;
+            height: 64px;
+            background: #10a37f;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            color: white;
+            font-size: 32px;
+        }
+
+        .confirmation-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2d2d2d;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .confirmation-subtitle {
+            font-size: 14px;
+            color: #6e6e6e;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .order-summary {
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            font-size: 14px;
+        }
+
+        .summary-row.total {
+            border-top: 2px solid #e5e5e5;
+            margin-top: 8px;
+            padding-top: 12px;
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+            padding: 12px 16px;
+            background: #f0f0f0;
+            border-radius: 18px;
+            width: fit-content;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: #8e8e8e;
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+                opacity: 0.7;
+            }
+            30% {
+                transform: translateY(-10px);
+                opacity: 1;
+            }
+        }
+
+        /* Input Area */
+        .input-area {
+            padding: 32px 180px;
+            border-top: 1px solid #e5e5e5;
+        }
+
+        .input-container {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .input-box {
+            width: 100%;
+            height: 56px;
+            padding: 18px 96px 18px 56px;
+            border: 1px solid #d0d0d0;
+            border-radius: 28px;
+            font-size: 15px;
+            font-family: inherit;
+            resize: none;
+            outline: none;
+            transition: all 0.2s;
+            background: #fff;
+            line-height: 20px;
+            display: block;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .input-box:focus {
+            border-color: #10a37f;
+            box-shadow: 0 0 0 3px rgba(16, 163, 127, 0.1);
+        }
+
+        .input-plus {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #4e4e4e;
+            font-size: 22px;
+            font-weight: 300;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 22px;
+        }
+
+        .input-actions {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .input-icon-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4e4e4e;
+            flex-shrink: 0;
+        }
+
+        .input-icon-btn:hover {
+            background: #f0f0f0;
+        }
+
+        .input-icon-btn:last-child {
+            background: #2d2d2d;
+            color: white;
+        }
+
+        .input-icon-btn:last-child:hover {
+            background: #1a1a1a;
+        }
+
+        /* Next Button for Demo */
+        .next-btn {
+            position: fixed;
+            bottom: 32px;
+            right: 32px;
+            background: #10a37f;
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 24px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(16, 163, 127, 0.3);
+            transition: all 0.2s;
+            z-index: 1000;
+        }
+
+        .next-btn:hover {
+            background: #0d8a6a;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16, 163, 127, 0.4);
+        }
+
+        .next-btn:active {
+            transform: translateY(0);
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <svg class="chatgpt-logo" width="20" height="20" viewBox='0 0 320 320' xmlns='http://www.w3.org/2000/svg'>
+                    <path d='m297.06 130.97c7.26-21.79 4.76-45.66-6.85-65.48-17.46-30.4-52.56-46.04-86.84-38.68-15.25-17.18-37.16-26.95-60.13-26.81-35.04-.08-66.13 22.48-76.91 55.82-22.51 4.61-41.94 18.7-53.31 38.67-17.59 30.32-13.58 68.54 9.92 94.54-7.26 21.79-4.76 45.66 6.85 65.48 17.46 30.4 52.56 46.04 86.84 38.68 15.24 17.18 37.16 26.95 60.13 26.8 35.06.09 66.16-22.49 76.94-55.86 22.51-4.61 41.94-18.7 53.31-38.67 17.57-30.32 13.55-68.51-9.94-94.51zm-120.28 168.11c-14.03.02-27.62-4.89-38.39-13.88.49-.26 1.34-.73 1.89-1.07l63.72-36.8c3.26-1.85 5.26-5.32 5.24-9.07v-89.83l26.93 15.55c.29.14.48.42.52.74v74.39c-.04 33.08-26.83 59.9-59.91 59.97zm-128.84-55.03c-7.03-12.14-9.56-26.37-7.15-40.18.47.28 1.3.79 1.89 1.13l63.72 36.8c3.23 1.89 7.23 1.89 10.47 0l77.79-44.92v31.1c.02.32-.13.63-.38.83l-64.41 37.19c-28.69 16.52-65.33 6.7-81.92-21.95zm-16.77-139.09c7-12.16 18.05-21.46 31.21-26.29 0 .55-.03 1.52-.03 2.2v73.61c-.02 3.74 1.98 7.21 5.23 9.06l77.79 44.91-26.93 15.55c-.27.18-.61.21-.91.08l-64.42-37.22c-28.63-16.58-38.45-53.21-21.95-81.89zm221.26 51.49-77.79-44.92 26.93-15.54c.27-.18.61-.21.91-.08l64.42 37.19c28.68 16.57 38.51 53.26 21.94 81.94-7.01 12.14-18.05 21.44-31.2 26.28v-75.81c.03-3.74-1.96-7.2-5.2-9.06zm26.8-40.34c-.47-.29-1.3-.79-1.89-1.13l-63.72-36.8c-3.23-1.89-7.23-1.89-10.47 0l-77.79 44.92v-31.1c-.02-.32.13-.63.38-.83l64.41-37.16c28.69-16.55 65.37-6.7 81.91 22 6.99 12.12 9.52 26.31 7.15 40.1zm-168.51 55.43-26.94-15.55c-.29-.14-.48-.42-.52-.74v-74.39c.02-33.12 26.89-59.96 60.01-59.94 14.01 0 27.57 4.92 38.34 13.88-.49.26-1.33.73-1.89 1.07l-63.72 36.8c-3.26 1.85-5.26 5.31-5.24 9.06l-.04 89.79zm14.63-31.54 34.65-20.01 34.65 20v40.01l-34.65 20-34.65-20z'/>
+                </svg>
+            </div>
+
+            <div class="sidebar-content">
+                <div class="menu-item">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    New chat
+                </div>
+
+            <div class="menu-item">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"/>
+                    <path d="m21 21-4.35-4.35"/>
+                </svg>
+                Search chats
+            </div>
+
+            <div class="menu-item">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                    <circle cx="8.5" cy="8.5" r="1.5"/>
+                    <polyline points="21 15 16 10 5 21"/>
+                </svg>
+                Images
+            </div>
+
+            <div class="menu-item">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7"/>
+                    <rect x="14" y="3" width="7" height="7"/>
+                    <rect x="14" y="14" width="7" height="7"/>
+                    <rect x="3" y="14" width="7" height="7"/>
+                </svg>
+                Apps
+            </div>
+
+            <div class="menu-item">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="16 18 22 12 16 6"/>
+                    <polyline points="8 6 2 12 8 18"/>
+                </svg>
+                Codex
+            </div>
+
+            <div class="sidebar-section">
+                <div class="section-title">GPTs</div>
+                <div class="gpt-item">
+                    <div class="gpt-icon">D</div>
+                    DALL·E
+                </div>
+                <div class="gpt-item">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <circle cx="12" cy="12" r="3"/>
+                    </svg>
+                    Explore GPTs
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="section-title">Your chats</div>
+                <div id="chatsList">
+                    <div class="chat-item">Recipe for Pasta Carbonara</div>
+                    <div class="chat-item">Travel Tips for Japan</div>
+                    <div class="chat-item">Learning Python Basics</div>
+                    <div class="chat-item">Home Office Setup Ideas</div>
+                    <div class="chat-item">Book Recommendations</div>
+                </div>
+            </div>
+            </div>
+
+            <div class="user-profile">
+                <div class="user-avatar">HK</div>
+                <div class="user-info">
+                    <div class="user-name">Hammed Kohistani</div>
+                    <div class="user-badge">Plus</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="top-bar">
+                <div class="model-selector">
+                    ChatGPT 5.2
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="6 9 12 15 18 9"/>
+                    </svg>
+                </div>
+                <div class="top-bar-actions">
+                    <button class="icon-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="chat-area" id="chatArea">
+                <div class="empty-state" id="emptyState">
+                    <h1>Ready when you are.</h1>
+                    <div class="input-wrapper">
+                        <div class="input-container">
+                            <span class="input-plus">+</span>
+                            <textarea class="input-box" placeholder="Ask anything" rows="1" disabled></textarea>
+                            <div class="input-actions">
+                                <button class="input-icon-btn">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <mask id="mask0_mic_1" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">
+                                            <rect width="24" height="24" fill="#D9D9D9"/>
+                                        </mask>
+                                        <g mask="url(#mask0_mic_1)">
+                                            <path d="M12 14C11.1667 14 10.4583 13.7083 9.875 13.125C9.29167 12.5417 9 11.8333 9 11V5C9 4.16667 9.29167 3.45833 9.875 2.875C10.4583 2.29167 11.1667 2 12 2C12.8333 2 13.5417 2.29167 14.125 2.875C14.7083 3.45833 15 4.16667 15 5V11C15 11.8333 14.7083 12.5417 14.125 13.125C13.5417 13.7083 12.8333 14 12 14ZM11 21V17.925C9.26667 17.6917 7.83333 16.9167 6.7 15.6C5.56667 14.2833 5 12.75 5 11H7C7 12.3833 7.4875 13.5625 8.4625 14.5375C9.4375 15.5125 10.6167 16 12 16C13.3833 16 14.5625 15.5125 15.5375 14.5375C16.5125 13.5625 17 12.3833 17 11H19C19 12.75 18.4333 14.2833 17.3 15.6C16.1667 16.9167 14.7333 17.6917 13 17.925V21H11ZM12 12C12.2833 12 12.5208 11.9042 12.7125 11.7125C12.9042 11.5208 13 11.2833 13 11V5C13 4.71667 12.9042 4.47917 12.7125 4.2875C12.5208 4.09583 12.2833 4 12 4C11.7167 4 11.4792 4.09583 11.2875 4.2875C11.0958 4.47917 11 4.71667 11 5V11C11 11.2833 11.0958 11.5208 11.2875 11.7125C11.4792 11.9042 11.7167 12 12 12Z" fill="#4e4e4e"/>
+                                        </g>
+                                    </svg>
+                                </button>
+                                <button class="input-icon-btn">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <mask id="mask0_2103_11" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">
+                                            <rect width="24" height="24" fill="#D9D9D9"/>
+                                        </mask>
+                                        <g mask="url(#mask0_2103_11)">
+                                            <path d="M7 18V6H9V18H7ZM11 22V2H13V22H11ZM3 14V10H5V14H3ZM15 18V6H17V18H15ZM19 14V10H21V14H19Z" fill="white"/>
+                                        </g>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-area" style="display: none;">
+                <div class="input-container">
+                    <span class="input-plus">+</span>
+                    <textarea class="input-box" placeholder="Ask anything" rows="1" disabled></textarea>
+                    <div class="input-actions">
+                        <button class="input-icon-btn">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <mask id="mask0_mic_2" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">
+                                    <rect width="24" height="24" fill="#D9D9D9"/>
+                                </mask>
+                                <g mask="url(#mask0_mic_2)">
+                                    <path d="M12 14C11.1667 14 10.4583 13.7083 9.875 13.125C9.29167 12.5417 9 11.8333 9 11V5C9 4.16667 9.29167 3.45833 9.875 2.875C10.4583 2.29167 11.1667 2 12 2C12.8333 2 13.5417 2.29167 14.125 2.875C14.7083 3.45833 15 4.16667 15 5V11C15 11.8333 14.7083 12.5417 14.125 13.125C13.5417 13.7083 12.8333 14 12 14ZM11 21V17.925C9.26667 17.6917 7.83333 16.9167 6.7 15.6C5.56667 14.2833 5 12.75 5 11H7C7 12.3833 7.4875 13.5625 8.4625 14.5375C9.4375 15.5125 10.6167 16 12 16C13.3833 16 14.5625 15.5125 15.5375 14.5375C16.5125 13.5625 17 12.3833 17 11H19C19 12.75 18.4333 14.2833 17.3 15.6C16.1667 16.9167 14.7333 17.6917 13 17.925V21H11ZM12 12C12.2833 12 12.5208 11.9042 12.7125 11.7125C12.9042 11.5208 13 11.2833 13 11V5C13 4.71667 12.9042 4.47917 12.7125 4.2875C12.5208 4.09583 12.2833 4 12 4C11.7167 4 11.4792 4.09583 11.2875 4.2875C11.0958 4.47917 11 4.71667 11 5V11C11 11.2833 11.0958 11.5208 11.2875 11.7125C11.4792 11.9042 11.7167 12 12 12Z" fill="#4e4e4e"/>
+                                </g>
+                            </svg>
+                        </button>
+                        <button class="input-icon-btn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <mask id="mask1_2103_11" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">
+                                    <rect width="24" height="24" fill="#D9D9D9"/>
+                                </mask>
+                                <g mask="url(#mask1_2103_11)">
+                                    <path d="M7 18V6H9V18H7ZM11 22V2H13V22H11ZM3 14V10H5V14H3ZM15 18V6H17V18H15ZM19 14V10H21V14H19Z" fill="white"/>
+                                </g>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button class="next-btn" id="nextBtn">Start Demo →</button>
+
+    <script>
+        let currentStep = 0;
+        const chatArea = document.getElementById('chatArea');
+        const emptyState = document.getElementById('emptyState');
+        const nextBtn = document.getElementById('nextBtn');
+
+        const demoSteps = [
+            {
+                user: "I'm looking for Timberwolves tickets this month for 4 people, keeping it around $50 per ticket",
+                assistant: "I'll use the @<strong>Minnesota Timberwolves</strong> app to find games with availability for 4 tickets around $50 each.",
+                assistantFollowup: "Here are the upcoming home games at Target Center this month with tickets in your price range:",
+                module: 'games'
+            },
+            {
+                user: "My crew: Joel, Ed, Jordy",
+                assistant: "Perfect! I've got your group:<br><br>• <strong>Jordy Leiser</strong> - Prefers baseline seats<br>• <strong>Joel Resnicow</strong> - Prefers center court<br>• <strong>Ed Khoury</strong> - Prefers lower bowl<br><br>Based on everyone's preferences, I'd recommend lower bowl baseline seats near center court for the Trail Blazers game. This gives you a great view while balancing everyone's seating preferences. Would you like me to show you the best available options?"
+            },
+            {
+                user: "Sounds perfect, let's see what's available",
+                assistant: "Great! Here are the best lower bowl baseline sections near center court for the Trail Blazers game on February 5th:",
+                module: 'seating'
+            },
+            {
+                user: "Buy tickets for Section 108",
+                assistant: "Perfect choice! I'll reserve Section 108, Row A (Seats 1-4) for you. That's 4 tickets at $45 each ($180 total) with food and drinks included.<br><br>There are also options to enhance your experience like post-game free throws on the court, on-court access to watch warmups, or a meet & greet with Crunch. Is anyone in your group celebrating anything special? I can help make the gameday more memorable."
+            },
+            {
+                user: "It's Ed's birthday!",
+                assistant: "That's awesome! Let's make it special for Ed. I can have his name featured on the jumbotron with a custom birthday message shown at the start of the second half for $50. Would you like to add that?"
+            },
+            {
+                user: "Yes, let's do it",
+                assistant: "Great! What message would you like displayed on the jumbotron for Ed's birthday?"
+            },
+            {
+                user: "Happy Birthday Ed! - From the Jump Crew",
+                assistant: "Perfect! I've added the jumbotron birthday message for Ed ($50). It will be displayed at the start of the second half.<br><br>Also, as an appreciation from the team, <strong>Ed will receive 25% off all merchandise</strong> at the team store on game day. Just show your tickets at checkout!"
+            },
+            {
+                assistant: "Are you ready to checkout?"
+            },
+            {
+                user: "Yes",
+                assistant: "Great! How would you like to pay?<br><br>• <strong>Amex ending in 1004</strong> (on file)<br>• <strong>Use a new card</strong><br>• <strong>Split the cost</strong> - Requires a $25 deposit now and holds seats for 24 hours until everyone pays their share"
+            },
+            {
+                user: "Split the cost",
+                assistant: "Perfect! I'll split the $230 total among your group of 4. That's $57.50 per person.<br><br>I'll charge your Amex ending in 1004 the $25 deposit now to hold the seats. I'll send payment links to Joel, Ed, and Jordy so they can pay their share. Once everyone has paid, your tickets will be issued.<br><br>Here's your order summary:",
+                module: 'confirmation'
+            },
+            {
+                user: "We need to add Ed's parents since they want to attend the game too",
+                assistant: "That's great! Let me find seats for your group of 6. I'll look for seat blocks that fit within your budget and keep everyone together.",
+                assistantFollowup: "Here are available seat blocks for 6 people:",
+                module: 'seating-6'
+            },
+            {
+                user: "Book Section 110",
+                assistant: "Perfect! I've updated your order to Section 110, Row C, Seats 5-10 (6 seats total).<br><br>The new total is $312 ($52 per seat × 6 people), plus the $50 jumbotron message. Your updated total is <strong>$362</strong>.<br><br>To transfer tickets to Ed's parents, I'll need their contact information. What are their names and email addresses?"
+            },
+            {
+                user: "Ed's parents are Susan and David Khoury - susan@email.com and david@email.com",
+                assistant: "Got it! I've sent tickets to:<br><br>• <strong>Susan Khoury</strong> - susan@email.com (Section 110, Row C, Seat 9)<br>• <strong>David Khoury</strong> - david@email.com (Section 110, Row C, Seat 10)<br><br>They'll receive emails with their tickets and can add them to their Jump wallets. Everyone is all set for the game on February 5th!"
+            }
+        ];
+
+        function typeText(element, text, speed = 40) {
+            return new Promise((resolve) => {
+                // Create a temporary div to parse HTML
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = text;
+
+                // Get all text nodes and elements
+                const nodes = [];
+                function extractNodes(node) {
+                    if (node.nodeType === 3) { // Text node
+                        const words = node.textContent.split(/(\s+)/);
+                        words.forEach(word => {
+                            if (word) {
+                                nodes.push({ type: 'text', content: word });
+                            }
+                        });
+                    } else if (node.nodeType === 1) { // Element node
+                        nodes.push({ type: 'open', tag: node.tagName.toLowerCase() });
+                        Array.from(node.childNodes).forEach(child => extractNodes(child));
+                        nodes.push({ type: 'close', tag: node.tagName.toLowerCase() });
+                    }
+                }
+
+                Array.from(tempDiv.childNodes).forEach(child => extractNodes(child));
+
+                let index = 0;
+                element.innerHTML = '';
+                let currentContainer = element;
+                const tagStack = [];
+
+                function addNode() {
+                    if (index < nodes.length) {
+                        const node = nodes[index];
+
+                        if (node.type === 'open') {
+                            const tag = document.createElement(node.tag);
+                            currentContainer.appendChild(tag);
+                            tagStack.push(currentContainer);
+                            currentContainer = tag;
+                        } else if (node.type === 'close') {
+                            currentContainer = tagStack.pop();
+                        } else {
+                            const span = document.createElement('span');
+                            span.textContent = node.content;
+                            span.style.opacity = '0';
+                            span.style.display = 'inline';
+                            currentContainer.appendChild(span);
+
+                            // Trigger fade in
+                            setTimeout(() => {
+                                span.style.transition = 'opacity 0.15s ease-in';
+                                span.style.opacity = '1';
+                            }, 10);
+                        }
+
+                        index++;
+                        chatArea.scrollTop = chatArea.scrollHeight;
+                        setTimeout(addNode, node.content && node.content.trim() ? speed : 0);
+                    } else {
+                        resolve();
+                    }
+                }
+
+                addNode();
+            });
+        }
+
+        async function showMessage(type, text, module = null, followupText = null) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type === 'assistant' ? 'assistant-message' : 'user-message'}`;
+
+            const avatar = document.createElement('div');
+            avatar.className = `message-avatar ${type === 'assistant' ? 'assistant' : ''}`;
+            avatar.textContent = type === 'assistant' ? 'J' : 'HK';
+
+            const content = document.createElement('div');
+            content.className = 'message-content';
+
+            const textDiv = document.createElement('div');
+            textDiv.className = 'message-text';
+
+            content.appendChild(textDiv);
+            messageDiv.appendChild(avatar);
+            messageDiv.appendChild(content);
+            chatArea.appendChild(messageDiv);
+
+            // Type out the text for assistant messages
+            if (type === 'assistant') {
+                await typeText(textDiv, text, 20);
+
+                // If there's followup text, show it after a delay
+                if (followupText) {
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+
+                    // Create a new message div for the followup (appears as separate message)
+                    const followupMessageDiv = document.createElement('div');
+                    followupMessageDiv.className = 'message assistant-message';
+
+                    const followupAvatar = document.createElement('div');
+                    followupAvatar.className = 'message-avatar assistant';
+                    followupAvatar.textContent = 'J';
+
+                    const followupContent = document.createElement('div');
+                    followupContent.className = 'message-content';
+
+                    const followupTextDiv = document.createElement('div');
+                    followupTextDiv.className = 'message-text';
+
+                    followupContent.appendChild(followupTextDiv);
+                    followupMessageDiv.appendChild(followupAvatar);
+                    followupMessageDiv.appendChild(followupContent);
+                    chatArea.appendChild(followupMessageDiv);
+
+                    await typeText(followupTextDiv, followupText, 20);
+
+                    // Add module to the followup message
+                    if (module) {
+                        setTimeout(() => {
+                            // Add app header for all modules
+                            const appHeader = document.createElement('div');
+                            appHeader.className = 'app-header';
+                            appHeader.innerHTML = `
+                                <div class="app-info">
+                                    <div class="app-logo"><img src="../images/timberwolves-logo.png" alt="Timberwolves"></div>
+                                    <div class="app-name">Minnesota Timberwolves</div>
+                                </div>
+                                <div class="app-actions">
+                                    <button class="action-btn" title="Good response">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/>
+                                        </svg>
+                                    </button>
+                                    <button class="action-btn" title="Bad response">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            `;
+                            followupContent.appendChild(appHeader);
+
+                            followupContent.appendChild(createModule(module));
+
+                            // Add summary text for games module
+                            if (module === 'games') {
+                                setTimeout(async () => {
+                                    const summaryDiv = document.createElement('div');
+                                    summaryDiv.className = 'message-text';
+                                    summaryDiv.style.marginTop = '16px';
+                                    followupContent.appendChild(summaryDiv);
+
+                                    await typeText(summaryDiv, "I found 4 games in February with tickets around $50 each. The Trail Blazers game on Feb 5th has a <strong>Family 4-Pack</strong> available at $180 — that's 4 tickets + 4 drinks + 4 hot dogs, so you're getting the food and beverages included at the same price.<br><br>Who are you planning to go with? I can find the perfect seats based on everyone's preferences.", 20);
+                                    chatArea.scrollTop = chatArea.scrollHeight;
+                                }, 500);
+                            }
+
+                            chatArea.scrollTop = chatArea.scrollHeight;
+
+                            // Don't add action buttons since app header has thumbs up/down
+                        }, 300);
+                    }
+                } else if (module) {
+                    setTimeout(() => {
+                        // Add app header for all modules
+                        const appHeader = document.createElement('div');
+                        appHeader.className = 'app-header';
+                        appHeader.innerHTML = `
+                            <div class="app-info">
+                                <div class="app-logo"><img src="../images/timberwolves-logo.png" alt="Timberwolves"></div>
+                                <div class="app-name">Minnesota Timberwolves</div>
+                            </div>
+                            <div class="app-actions">
+                                <button class="action-btn" title="Good response">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/>
+                                    </svg>
+                                </button>
+                                <button class="action-btn" title="Bad response">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        `;
+                        content.appendChild(appHeader);
+
+                        content.appendChild(createModule(module));
+
+                        // Add summary text for games module
+                        if (module === 'games') {
+                            setTimeout(async () => {
+                                const summaryDiv = document.createElement('div');
+                                summaryDiv.className = 'message-text';
+                                summaryDiv.style.marginTop = '16px';
+                                content.appendChild(summaryDiv);
+
+                                await typeText(summaryDiv, "I found 4 games in February with tickets around $50 each. The Trail Blazers game on Feb 5th has a <strong>Family 4-Pack</strong> available at $180 — that's 4 tickets + 4 drinks + 4 hot dogs, so you're getting the food and beverages included at the same price.<br><br>Who are you planning to go with? I can find the perfect seats based on everyone's preferences.", 20);
+                                chatArea.scrollTop = chatArea.scrollHeight;
+                            }, 500);
+                        }
+
+                        chatArea.scrollTop = chatArea.scrollHeight;
+
+                        // Don't add action buttons since app header has thumbs up/down
+                    }, 300);
+                } else {
+                    // Add action buttons after text if no module or followup
+                    setTimeout(() => {
+                        const actionsDiv = createActionButtons();
+                        content.appendChild(actionsDiv);
+                    }, 100);
+                }
+            } else {
+                // Show user messages instantly
+                textDiv.textContent = text;
+            }
+
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }
+
+        function createActionButtons() {
+            const actionsDiv = document.createElement('div');
+            actionsDiv.className = 'message-actions';
+            actionsDiv.innerHTML = `
+                <button class="action-btn" title="Copy">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                    </svg>
+                </button>
+                <button class="action-btn" title="Good response">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/>
+                    </svg>
+                </button>
+                <button class="action-btn" title="Bad response">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"/>
+                    </svg>
+                </button>
+                <button class="action-btn" title="Share">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+                        <polyline points="16 6 12 2 8 6"/>
+                        <line x1="12" y1="2" x2="12" y2="15"/>
+                    </svg>
+                </button>
+                <button class="action-btn" title="Regenerate">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="23 4 23 10 17 10"/>
+                        <polyline points="1 20 1 14 7 14"/>
+                        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+                    </svg>
+                </button>
+                <button class="action-btn" title="More">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <circle cx="12" cy="12" r="1.5"/>
+                        <circle cx="19" cy="12" r="1.5"/>
+                        <circle cx="5" cy="12" r="1.5"/>
+                    </svg>
+                </button>
+            `;
+            return actionsDiv;
+        }
+
+        function createModule(type) {
+            const module = document.createElement('div');
+            module.className = 'jump-module';
+
+            if (type === 'games') {
+                module.innerHTML = `
+                    <div class="events-title">Upcoming Home Games</div>
+                    <div class="events-list">
+                        <div class="event-item">
+                            <div class="event-image">
+                                <div class="event-matchup">
+                                    <div class="event-team home"><img src="../images/timberwolves-logo.png" alt="Timberwolves"></div>
+                                    <div class="event-team blazers"><img src="../images/trailblazers.png" alt="Trail Blazers"></div>
+                                </div>
+                            </div>
+                            <div class="event-details">
+                                <div class="event-title">Timberwolves vs Trail Blazers</div>
+                                <div class="event-datetime">Feb 5, Wed • 7:00 PM</div>
+                                <div class="event-venue">Target Center</div>
+                                <div class="event-offer-badge">
+                                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                                    </svg>
+                                    Family 4-Pack
+                                </div>
+                            </div>
+                            <div class="event-price">
+                                <span>$180 total</span>
+                                <span class="event-price-sub">$45 per seat</span>
+                            </div>
+                        </div>
+                        <div class="event-item">
+                            <div class="event-image">
+                                <div class="event-matchup">
+                                    <div class="event-team home"><img src="../images/timberwolves-logo.png" alt="Timberwolves"></div>
+                                    <div class="event-team wizards"><img src="../images/wizards.png" alt="Wizards"></div>
+                                </div>
+                            </div>
+                            <div class="event-details">
+                                <div class="event-title">Timberwolves vs Wizards</div>
+                                <div class="event-datetime">Feb 12, Wed • 7:30 PM</div>
+                                <div class="event-venue">Target Center</div>
+                            </div>
+                            <div class="event-price">$48+</div>
+                        </div>
+                        <div class="event-item">
+                            <div class="event-image">
+                                <div class="event-matchup">
+                                    <div class="event-team home"><img src="../images/timberwolves-logo.png" alt="Timberwolves"></div>
+                                    <div class="event-team spurs"><img src="../images/spurs.png" alt="Spurs"></div>
+                                </div>
+                            </div>
+                            <div class="event-details">
+                                <div class="event-title">Timberwolves vs Spurs</div>
+                                <div class="event-datetime">Feb 19, Wed • 7:00 PM</div>
+                                <div class="event-venue">Target Center</div>
+                            </div>
+                            <div class="event-price">$52+</div>
+                        </div>
+                        <div class="event-item">
+                            <div class="event-image">
+                                <div class="event-matchup">
+                                    <div class="event-team home"><img src="../images/timberwolves-logo.png" alt="Timberwolves"></div>
+                                    <div class="event-team pistons"><img src="../images/pistons.png" alt="Pistons"></div>
+                                </div>
+                            </div>
+                            <div class="event-details">
+                                <div class="event-title">Timberwolves vs Pistons</div>
+                                <div class="event-datetime">Feb 26, Wed • 7:30 PM</div>
+                                <div class="event-venue">Target Center</div>
+                            </div>
+                            <div class="event-price">$49+</div>
+                        </div>
+                    </div>
+                    <div class="events-footer">
+                        <button class="view-more-btn">View more games on Jump</button>
+                    </div>
+                    <div class="events-disclaimer">Prices are subject to change and listings are controlled by the team</div>
+                `;
+            } else if (type === 'seating') {
+                module.innerHTML = `
+                    <div class="event-header-module">
+                        <div class="event-header-image">
+                            <div class="event-matchup">
+                                <div class="event-header-team" style="background: #0C2340;">
+                                    <img src="../images/timberwolves-logo.png" alt="Timberwolves">
+                                </div>
+                                <div class="event-header-team" style="background: #E03A3E;">
+                                    <img src="../images/trailblazers.png" alt="Trail Blazers">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="event-header-info">
+                            <div class="event-header-title">Timberwolves vs Trail Blazers</div>
+                            <div class="event-header-meta">Feb 5, Wed • 7:00 PM<br>Target Center</div>
+                        </div>
+                    </div>
+                    <div class="seating-module">
+                        <div class="seating-cards">
+                            <div class="section-card">
+                                <div class="section-card-image" style="background-image: url('../images/section-108.png');"></div>
+                                <div class="section-card-content">
+                                    <div class="section-card-header">
+                                        <div>
+                                            <div class="section-card-title">Section 108</div>
+                                            <div class="section-card-subtitle">Row A (Seats 1-4)</div>
+                                        </div>
+                                        <div class="section-card-price-top">$45/ea</div>
+                                    </div>
+                                    <div class="section-card-location">Lower bowl • Baseline corner • Great action view</div>
+                                    <div class="section-card-footer">
+                                        <div class="section-card-price">
+                                            <div class="section-price-main">$180 total</div>
+                                            <div class="section-price-sub">includes food & drinks</div>
+                                        </div>
+                                        <button class="section-select-btn">Buy Tickets</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="section-card">
+                                <div class="section-card-image" style="background-image: url('../images/section-110.png');"></div>
+                                <div class="section-card-content">
+                                    <div class="section-card-header">
+                                        <div>
+                                            <div class="section-card-title">Section 110</div>
+                                            <div class="section-card-subtitle">Row C (Seats 5-8)</div>
+                                        </div>
+                                        <div class="section-card-price-top">$52/ea</div>
+                                    </div>
+                                    <div class="section-card-location">Lower bowl • Baseline center • Balanced perspectives</div>
+                                    <div class="section-card-footer">
+                                        <div class="section-card-price">
+                                            <div class="section-price-main">$208 total</div>
+                                            <div class="section-price-sub">includes food & drinks</div>
+                                        </div>
+                                        <button class="section-select-btn">Buy Tickets</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="section-card">
+                                <div class="section-card-image" style="background-image: url('../images/section.png');"></div>
+                                <div class="section-card-content">
+                                    <div class="section-card-header">
+                                        <div>
+                                            <div class="section-card-title">Section 112</div>
+                                            <div class="section-card-subtitle">Row B (Seats 9-12)</div>
+                                        </div>
+                                        <div class="section-card-price-top">$58/ea</div>
+                                    </div>
+                                    <div class="section-card-location">Lower bowl • Near center court • Prime viewing angle</div>
+                                    <div class="section-card-footer">
+                                        <div class="section-card-price">
+                                            <div class="section-price-main">$232 total</div>
+                                            <div class="section-price-sub">includes food & drinks</div>
+                                        </div>
+                                        <button class="section-select-btn">Buy Tickets</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="section-card">
+                                <div class="section-card-image" style="background-image: url('../images/section.png');"></div>
+                                <div class="section-card-content">
+                                    <div class="section-card-header">
+                                        <div>
+                                            <div class="section-card-title">Section 115</div>
+                                            <div class="section-card-subtitle">Row D (Seats 1-4)</div>
+                                        </div>
+                                        <div class="section-card-price-top">$68/ea</div>
+                                    </div>
+                                    <div class="section-card-location">Lower bowl • Center court • Best overall view</div>
+                                    <div class="section-card-footer">
+                                        <div class="section-card-price">
+                                            <div class="section-price-main">$272 total</div>
+                                            <div class="section-price-sub">includes food & drinks</div>
+                                        </div>
+                                        <button class="section-select-btn">Buy Tickets</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else if (type === 'seating-6') {
+                module.innerHTML = `
+                    <div class="event-header-module">
+                        <div class="event-header-image">
+                            <div class="event-matchup">
+                                <div class="event-header-team" style="background: #0C2340;">
+                                    <img src="../images/timberwolves-logo.png" alt="Timberwolves">
+                                </div>
+                                <div class="event-header-team" style="background: #E03A3E;">
+                                    <img src="../images/trailblazers.png" alt="Trail Blazers">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="event-header-info">
+                            <div class="event-header-title">Timberwolves vs Trail Blazers</div>
+                            <div class="event-header-meta">Feb 5, Wed • 7:00 PM<br>Target Center</div>
+                        </div>
+                    </div>
+                    <div class="seating-module">
+                        <div class="seating-cards">
+                            <div class="section-card">
+                                <div class="section-card-image" style="background-image: url('../images/section-108.png');"></div>
+                                <div class="section-card-content">
+                                    <div class="section-card-header">
+                                        <div>
+                                            <div class="section-card-title">Section 108</div>
+                                            <div class="section-card-subtitle">Row B (Seats 1-6)</div>
+                                        </div>
+                                        <div class="section-card-price-top">$45/ea</div>
+                                    </div>
+                                    <div class="section-card-location">Lower bowl • Baseline corner • Great action view</div>
+                                    <div class="section-card-footer">
+                                        <div class="section-card-price">
+                                            <div class="section-price-main">$270 total</div>
+                                            <div class="section-price-sub">includes food & drinks</div>
+                                        </div>
+                                        <button class="section-select-btn">Buy Tickets</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="section-card">
+                                <div class="section-card-image" style="background-image: url('../images/section-110.png');"></div>
+                                <div class="section-card-content">
+                                    <div class="section-card-header">
+                                        <div>
+                                            <div class="section-card-title">Section 110</div>
+                                            <div class="section-card-subtitle">Row C (Seats 5-10)</div>
+                                        </div>
+                                        <div class="section-card-price-top">$52/ea</div>
+                                    </div>
+                                    <div class="section-card-location">Lower bowl • Baseline center • Balanced perspectives</div>
+                                    <div class="section-card-footer">
+                                        <div class="section-card-price">
+                                            <div class="section-price-main">$312 total</div>
+                                            <div class="section-price-sub">includes food & drinks</div>
+                                        </div>
+                                        <button class="section-select-btn">Buy Tickets</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="section-card">
+                                <div class="section-card-image" style="background-image: url('../images/section.png');"></div>
+                                <div class="section-card-content">
+                                    <div class="section-card-header">
+                                        <div>
+                                            <div class="section-card-title">Section 112</div>
+                                            <div class="section-card-subtitle">Row B (Seats 7-12)</div>
+                                        </div>
+                                        <div class="section-card-price-top">$58/ea</div>
+                                    </div>
+                                    <div class="section-card-location">Lower bowl • Near center court • Prime viewing angle</div>
+                                    <div class="section-card-footer">
+                                        <div class="section-card-price">
+                                            <div class="section-price-main">$348 total</div>
+                                            <div class="section-price-sub">includes food & drinks</div>
+                                        </div>
+                                        <button class="section-select-btn">Buy Tickets</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="section-card">
+                                <div class="section-card-image" style="background-image: url('../images/section.png');"></div>
+                                <div class="section-card-content">
+                                    <div class="section-card-header">
+                                        <div>
+                                            <div class="section-card-title">Section 115</div>
+                                            <div class="section-card-subtitle">Row D (Seats 3-8)</div>
+                                        </div>
+                                        <div class="section-card-price-top">$68/ea</div>
+                                    </div>
+                                    <div class="section-card-location">Lower bowl • Center court • Best overall view</div>
+                                    <div class="section-card-footer">
+                                        <div class="section-card-price">
+                                            <div class="section-price-main">$408 total</div>
+                                            <div class="section-price-sub">includes food & drinks</div>
+                                        </div>
+                                        <button class="section-select-btn">Buy Tickets</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else if (type === 'experiences') {
+                module.innerHTML = `
+                    <div class="experience-cards">
+                        <div class="experience-card premium">
+                            <span class="experience-badge">Premium</span>
+                            <h3 class="experience-title">Courtside VIP</h3>
+                            <p class="experience-description">Ultimate basketball experience with exclusive perks</p>
+                            <ul class="experience-features">
+                                <li>Front row courtside seats</li>
+                                <li>Pre-game locker room tour</li>
+                                <li>Meet & greet with players</li>
+                                <li>Premium dining & drinks</li>
+                                <li>VIP parking pass</li>
+                            </ul>
+                            <div class="experience-price">$1,299</div>
+                            <div class="experience-price-note">per person</div>
+                        </div>
+                        <div class="experience-card">
+                            <h3 class="experience-title">Club Access</h3>
+                            <p class="experience-description">Enhanced game experience with premium amenities</p>
+                            <ul class="experience-features">
+                                <li>Club level seating</li>
+                                <li>Access to club lounge</li>
+                                <li>Complimentary food & drinks</li>
+                                <li>Private entrance</li>
+                            </ul>
+                            <div class="experience-price">$389</div>
+                            <div class="experience-price-note">per person</div>
+                        </div>
+                    </div>
+                `;
+            } else if (type === 'premium-details') {
+                module.innerHTML = `
+                    <div class="experience-card premium" style="max-width: 600px;">
+                        <span class="experience-badge">Premium Experience</span>
+                        <h3 class="experience-title">Courtside VIP Package Details</h3>
+                        <p class="experience-description">Experience Timberwolves basketball like never before with our exclusive Courtside VIP package</p>
+                        <ul class="experience-features">
+                            <li><strong>Courtside Seats:</strong> First row seating directly on the court in Section 110</li>
+                            <li><strong>Pre-Game Access:</strong> Exclusive locker room tour 90 minutes before tip-off</li>
+                            <li><strong>Player Meet & Greet:</strong> Photo opportunity with select Timberwolves players</li>
+                            <li><strong>Premium Dining:</strong> 3-course meal at the Lexus Club with unlimited drinks</li>
+                            <li><strong>VIP Parking:</strong> Reserved spot in the VIP lot with concierge service</li>
+                            <li><strong>Exclusive Merchandise:</strong> Authentic team jersey and game program</li>
+                            <li><strong>Game Ball:</strong> Commemorative signed basketball</li>
+                        </ul>
+                        <div class="experience-price">$1,299</div>
+                        <div class="experience-price-note">per person • Limited availability</div>
+                    </div>
+                `;
+            } else if (type === 'confirmation') {
+                module.innerHTML = `
+                    <div class="confirmation-module">
+                        <div class="confirmation-icon">✓</div>
+                        <h2 class="confirmation-title">Order Complete!</h2>
+                        <p class="confirmation-subtitle">Your tickets and experiences are confirmed. Details sent to your email.</p>
+
+                        <div class="order-summary">
+                            <h3 style="margin-bottom: 16px; color: #2d2d2d;">Order Summary</h3>
+                            <div class="summary-row">
+                                <span>Event:</span>
+                                <span style="font-weight: 600;">Timberwolves vs Trail Blazers</span>
+                            </div>
+                            <div class="summary-row">
+                                <span>Date:</span>
+                                <span>Wednesday, February 5, 2026 • 7:00 PM</span>
+                            </div>
+                            <div class="summary-row">
+                                <span>Venue:</span>
+                                <span>Target Center, Minneapolis</span>
+                            </div>
+                            <div class="summary-row">
+                                <span>Seats:</span>
+                                <span>Section 108, Row A, Seats 1-4</span>
+                            </div>
+                            <div class="summary-row">
+                                <span>Tickets:</span>
+                                <span>4 tickets × $45</span>
+                            </div>
+                            <div class="summary-row">
+                                <span>Family 4-Pack:</span>
+                                <span>Includes food & drinks</span>
+                            </div>
+                            <div class="summary-row">
+                                <span>Jumbotron Message:</span>
+                                <span>"Happy Birthday Ed! - From the Jump Crew"</span>
+                            </div>
+                            <div class="summary-row">
+                                <span></span>
+                                <span>$50.00</span>
+                            </div>
+                            <div class="summary-row total">
+                                <span>Total:</span>
+                                <span style="color: #266092;">$230.00</span>
+                            </div>
+                        </div>
+
+                        <p style="font-size: 13px; color: #6e6e6e; text-align: center; margin-top: 16px;">
+                            Your tickets will be available in your Jump wallet immediately.<br>
+                            Order ID: JUMP-MIN-260205-108
+                        </p>
+                    </div>
+                `;
+            }
+
+            return module;
+        }
+
+        function showTypingIndicator() {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message';
+            messageDiv.id = 'typingIndicator';
+
+            const avatar = document.createElement('div');
+            avatar.className = 'message-avatar assistant';
+            avatar.textContent = 'J';
+
+            const content = document.createElement('div');
+            content.className = 'message-content';
+
+            const typing = document.createElement('div');
+            typing.className = 'typing-indicator';
+            typing.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
+
+            content.appendChild(typing);
+            messageDiv.appendChild(avatar);
+            messageDiv.appendChild(content);
+            chatArea.appendChild(messageDiv);
+
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }
+
+        function removeTypingIndicator() {
+            const indicator = document.getElementById('typingIndicator');
+            if (indicator) {
+                indicator.remove();
+            }
+        }
+
+        function nextStep() {
+            if (currentStep === 0) {
+                emptyState.style.display = 'none';
+                document.querySelector('.input-area').style.display = 'block';
+
+                // Add current chat to sidebar
+                const chatsList = document.getElementById('chatsList');
+                const newChat = document.createElement('div');
+                newChat.className = 'chat-item active';
+                newChat.textContent = 'Timberwolves Tickets for 4';
+                chatsList.insertBefore(newChat, chatsList.firstChild);
+            }
+
+            if (currentStep >= demoSteps.length) {
+                nextBtn.textContent = 'Demo Complete ✓';
+                nextBtn.style.background = '#6e6e6e';
+                nextBtn.disabled = true;
+                return;
+            }
+
+            const step = demoSteps[currentStep];
+
+            if (step.user) {
+                showMessage('user', step.user);
+                setTimeout(() => {
+                    showTypingIndicator();
+                    setTimeout(() => {
+                        removeTypingIndicator();
+                        showMessage('assistant', step.assistant, step.module, step.assistantFollowup);
+                    }, 1500);
+                }, 500);
+            } else if (step.click) {
+                setTimeout(() => {
+                    showTypingIndicator();
+                    setTimeout(() => {
+                        removeTypingIndicator();
+                        showMessage('assistant', step.assistant, step.module, step.assistantFollowup);
+                    }, 1500);
+                }, 300);
+            } else if (step.assistant) {
+                // Assistant-only message (no user input)
+                setTimeout(() => {
+                    showTypingIndicator();
+                    setTimeout(() => {
+                        removeTypingIndicator();
+                        showMessage('assistant', step.assistant, step.module, step.assistantFollowup);
+                    }, 1500);
+                }, 500);
+            }
+
+            currentStep++;
+
+            if (currentStep >= demoSteps.length) {
+                nextBtn.textContent = 'Demo Complete ✓';
+                nextBtn.style.background = '#6e6e6e';
+                setTimeout(() => {
+                    nextBtn.disabled = true;
+                }, 1000);
+            } else {
+                nextBtn.textContent = `Next Step (${currentStep}/${demoSteps.length}) →`;
+            }
+        }
+
+        nextBtn.addEventListener('click', nextStep);
+    </script>
+</body>
+</html>
