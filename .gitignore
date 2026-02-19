@@ -1,4 +1,7 @@
-active/E2ECampaign-STR/
-active/b2bapprovalcards/
 node_modules/
 .DS_Store
+.next/
+.env
+.env*.local
+*.pem
+*.tsbuildinfo
